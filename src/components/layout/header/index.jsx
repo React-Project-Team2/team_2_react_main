@@ -11,8 +11,7 @@ const Header = () => {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="ms-auto d-flex justify-content-between align-items-center" style={{ width: "30%" }}>
-                    <Nav.Link href="/">Home</Nav.Link>
-                    <Nav.Link href="/forum">Forum</Nav.Link>
+                    <Nav.Link href="/">Forum</Nav.Link>
                     <Nav.Link href="/board">게시판</Nav.Link>
                     <Nav.Link href="/about">About</Nav.Link>
                     <Nav.Link href="#">
