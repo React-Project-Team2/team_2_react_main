@@ -1,0 +1,20 @@
+.navbar {
+  padding: 20px 10px 20px 0px;
+  background-color: rgb(249 223 191);
+  transition: all ease 0.4s;
+}
+
+.navbar-brand {
+  font-size: 22px;
+  color: black !important;
+}
+
+.navbar .nav-link {
+  font-size: 16px;
+  color: #777777;
+}
+
+.animate {
+  padding: 0px 10px 0px 0px;
+  transition: all ease 0.4s;
+}
