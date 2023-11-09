@@ -35,7 +35,7 @@ const Header = () => {
                     <Nav.Link href="#">
                       <PersonCircle size={25} />
                     </Nav.Link>
-                    <Nav.Link href="#">Login</Nav.Link>
+                    <Nav.Link href="/signIn">로그인</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Container>
