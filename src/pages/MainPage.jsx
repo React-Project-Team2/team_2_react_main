@@ -1,11 +1,18 @@
 import React from 'react'
+import '../styles/MainPage.css'
+import ImageGallery from '../components/common/imageGallery/ImageGallery'
 
 const MainPage = () => {
   return (
-    <div>
-      <button type="button" className="btn btn-primary">Hello World!</button>
-    </div>
-    
+    <>
+       <div className='w-auto d-flex justify-content-center align-items-center'>
+          <ImageGallery path="about" />
+       </div>
+       
+       <div className='w-auto custom-background'>
+
+       </div>
+    </>
   )
 }
 
