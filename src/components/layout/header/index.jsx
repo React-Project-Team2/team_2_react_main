@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import './index.css'
-import { Navbar, Nav, Container } from 'react-bootstrap'
-import { PersonCircle } from 'react-bootstrap-icons'
+import { Navbar, Nav, Container, Button } from 'react-bootstrap'
+import AuthContext from '../../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { state, dispatch } = useContext(AuthContext);
+
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isAnimate, setIsAnimate] = useState(false);
 
@@ -22,6 +26,12 @@ const Header = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollPosition]);
 
+  const handleLogout = () => {
+    dispatch({ type: 'LOGOUT' });
+    alert('로그아웃되었습니다.');
+    navigate('/');
+  };
+
   return (
     <Navbar collapseOnSelect expand="lg" data-bs-theme="light" className={isAnimate ? 'animate' : ''} sticky="top">
         <Container className='d-flex'>
@@ -29,13 +39,31 @@ const Header = () => {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="ms-auto d-flex justify-content-between align-items-center" style={{ width: "30%" }}>
-                    <Nav.Link href="/">Forum</Nav.Link>
-                    <Nav.Link href="/about">About</Nav.Link>
-                    <Nav.Link href="/board">게시판</Nav.Link>
-                    <Nav.Link href="#">
-                      <PersonCircle size={25} />
+                    
+                    <Nav.Link href="/">
+                      <Button variant="outline-secondary" className={isAnimate ? 'animate-btn' : 'animate-btn-reverse'}>
+                        Forum
+                      </Button>
                     </Nav.Link>
-                    <Nav.Link href="/signIn">로그인</Nav.Link>
+                    <Nav.Link href="/about">
+                      <Button variant="outline-secondary" className={isAnimate ? 'animate-btn' : 'animate-btn-reverse'}>
+                        About
+                      </Button>
+                    </Nav.Link>
+                    <Nav.Link href="/board">
+                      <Button variant="outline-secondary" className={isAnimate ? 'animate-btn' : 'animate-btn-reverse'}>
+                        게시판
+                      </Button>
+                    </Nav.Link>
+                    {state.isLogged ? (
+                      <Button variant="outline-secondary" className={isAnimate ? 'animate-btn' : 'animate-btn-reverse'} onClick={handleLogout}>로그아웃</Button>
+                    ) : (
+                      <Nav.Link href="/signIn">
+                        <Button variant="outline-secondary" className={isAnimate ? 'animate-btn' : 'animate-btn-reverse'}>
+                          로그인
+                        </Button>
+                      </Nav.Link>
+                    )}
                 </Nav>
             </Navbar.Collapse>
         </Container>
