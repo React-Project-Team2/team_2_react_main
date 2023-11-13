@@ -1,7 +1,9 @@
 import React from 'react'
 import '../styles/MainPage.css'
 import ImageGallery from '../components/common/imageGallery/ImageGallery'
-import ContainerNavbar from '../components/common/containNav/ContainerNav'
+import ContainerNavbar from '../components/common/containNavbar/ContainerNav'
+import Category from '../components/common/category/Category'
+import { Container } from 'react-bootstrap'
 
 const MainPage = () => {
   return (
@@ -19,7 +21,14 @@ const MainPage = () => {
         </div>
         <div class="bg-white text-dark container p-0">
           <ContainerNavbar />
-          컨테이너
+          <Container>
+            <Category
+              name = "후쿠오카" 
+              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              detail='1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+              postCount= '5'
+              />
+          </Container>
         </div>
       </div>
     </>
