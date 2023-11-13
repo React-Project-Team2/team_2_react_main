@@ -1,0 +1,12 @@
+#board-insert-div {
+  max-width: 1000px;
+}
+
+#editor {
+  height: 300px;
+}
+
+.btn-div {
+  display: flex;
+  justify-content: flex-end;
+}
