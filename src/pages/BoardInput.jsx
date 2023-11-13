@@ -8,6 +8,9 @@ import Quill from 'quill';
 
 const BoardInput = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  console.log(user);
 
   useEffect(
     () => {
@@ -48,7 +51,8 @@ const BoardInput = () => {
     const category = document.querySelector('#category').value;
     const title = document.querySelector('#title').value;
     const nickName = document.querySelector('#nickName').value;
-    const content = document.querySelector('#editor').firstChild.innerHTML;    
+    const content = document.querySelector('#editor').firstChild.innerHTML;   
+    const images = document.querySelector('#images').files;
 
     let formData = {
       category: category,
@@ -57,21 +61,23 @@ const BoardInput = () => {
       content : content
     }
 
-    for (let key in formData) {
-      if (formData[key] === '') return alert('입력창을 확인하세요');
-    }
+    console.log(images);
 
-    try {
-      const response = await axios.post('http://localhost:3300/posts', formData);
+    // for (let key in formData) {
+    //   if (formData[key] === '') return alert('입력창을 확인하세요');
+    // }
 
-      if (response.status === 201) {
-        alert('등록 완료');
-        navigate('/board');
-      }
+    // try {
+    //   const response = await axios.post('http://localhost:3300/posts', formData);
+
+    //   if (response.status === 201) {
+    //     alert('등록 완료');
+    //     navigate('/board');
+    //   }
       
-    } catch (error) {
-      console.log(error.message);
-    }
+    // } catch (error) {
+    //   console.log(error.message);
+    // }
   }
 
 
@@ -109,6 +115,11 @@ const BoardInput = () => {
               <div id="toolbar"></div>
               <div id="editor" className="editor-textarea"></div>
             </div>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>이미지</Form.Label>
+            <Form.Control id='images' name='images' type="file" multiple  />
           </Form.Group>
         </Form>
 
