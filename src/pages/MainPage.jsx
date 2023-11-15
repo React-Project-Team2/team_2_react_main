@@ -17,17 +17,41 @@ const MainPage = () => {
       <div className='w-auto custom-background '>
         <div class="pb-5 pt-5 container text-center">
           <h1>현지 학기제</h1>
-          <h3>sub name</h3>
+          <p>sub name</p>
         </div>
         <div class="bg-white text-dark container p-0">
           <ContainerNavbar />
           <Container>
             <Category
-              name = "후쿠오카" 
+              name = "Hukuoka" 
+              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              detail='후쿠오카 가고 싶다ㅏㅏ'
+              postCount= '5'
+              />
+            <Category
+              name= "Nagasaki"
               img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
               detail='1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
               postCount= '5'
               />
+            <Category
+              name= "Kumamoto"
+              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              detail='1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+              postCount= '5'
+              />
+            <Category
+              name= "Saga"
+              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              detail='1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+              postCount= '5'
+            />
+            <Category
+              name= "Oita"
+              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              detail='1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+              postCount= '5'
+            />
           </Container>
         </div>
       </div>
