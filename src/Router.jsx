@@ -5,6 +5,7 @@ import AboutPage from './pages/AboutPage'
 import BoardPage from './pages/BoardPage'
 import SignUpPage from './pages/SignUpPage'
 import SignInPage from './pages/SignInPage'
+import BoardInput from './pages/BoardInput'
 
 const Router = () => {
   return (
@@ -14,6 +15,7 @@ const Router = () => {
       <Route path="/board" element={<BoardPage />} />
       <Route path="/signUp" element={<SignUpPage />} />
       <Route path="/signIn" element={<SignInPage />} />
+      <Route path="/board/create" element={<BoardInput />} />
     </Routes>
   )
 }
