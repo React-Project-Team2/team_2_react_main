@@ -14,7 +14,7 @@ const Category = ({ img, name, detail, postCount }) => {
         <Col style={{ maxWidth : '30px'}}/>
         <Col className="d-flex flex-column">
           <h5>{name}</h5>
-          <p style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'break-all', lineHeight: '1.2' }}>{detail}</p>
+          <p style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-line', lineHeight: '1.2' }}>{detail}</p>
         </Col>
         <Col style={{ maxWidth : '30px'}}/>
         <Col className='mt-4' style={{ fontWeight: 'bold', fontSize: '1.3em', maxWidth : '150px'}}>
