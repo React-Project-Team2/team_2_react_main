@@ -1,6 +1,7 @@
 import React from 'react'
 import '../styles/BoardPage.css';
 import ContainerNavbar from '../components/common/containNavbar/ContainerNav.jsx';
+import PostComponent from '../components/PostComponent.jsx';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,6 +35,7 @@ const BoardPage = () => {
                 </Col>
               </Row>
             </Container>
+            <PostComponent />
           </div>
         </div>
       </div>
