@@ -2,8 +2,6 @@
   max-width: 1000px;
 }
 
-#category{ width: 20%; }
-
 .ql-toolbar {
     border-top-left-radius: 0.375rem;
     border-top-right-radius: 0.375rem;
@@ -13,13 +11,4 @@
   min-height: 300px;
   border-bottom-left-radius: 0.375rem;
   border-bottom-right-radius: 0.375rem;
-}
-
-.btn-div {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.btn-div>button{
-  margin-left: 0.5rem;
 }
