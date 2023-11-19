@@ -13,6 +13,7 @@ const BoardPage = () => {
           </div>
           <div className="bg-white container p-0">
             <ContainerNavbar />
+            <img src="https://www.his-j.com/kokunai/kanto/tour_info/okinawa/catchy/wp-content/uploads/2021/02/post_10242_01-730x410.jpg" className="img-ht img-fluid rounded" alt=''/>
           </div>
         </div>
       </div>
