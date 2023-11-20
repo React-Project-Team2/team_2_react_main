@@ -1,68 +1,101 @@
-import { React, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { React, useState, useRef, useMemo, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap'
-import '../styles/BoardInput.css'
+import ReactQuill, { Quill } from 'react-quill';
+import ImageResize from 'quill-image-resize';
+import 'react-quill/dist/quill.snow.css';
+
 import axios from 'axios';
-import Quill from 'quill';
+import '../styles/BoardInput.css'
 
+// 이미지 크기조절
+Quill.register('modules/ImageResize', ImageResize);
 
-const BoardInput = () => {
+const BoardInput = ({ page }) => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user'));
+  const url = 'http://localhost:3300/posts';
 
-  useEffect(
-    () => {
+  const quillRef = useRef();
+  const { post_id } = useParams();
+  const [content, setContent] = useState('');
+  const [category, setCategory] = useState('');
+  const [title, setTitle] = useState('');
 
-      const toolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike'],        // 굵게, 기울이기, 밑줄, 가운데 줄
-        ['blockquote'],                                   // 인용문
+  const today = new Date();
 
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        [{ 'indent': '-1' }, { 'indent': '+1' }],         // 내어쓰기 / 들여쓰기
-        [{ 'direction': 'rtl' }],                         // 글 시작지점(좌, 우)
-
-        [{ 'size': ['small', false, 'large', 'huge'] }],  // 글자크기
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],        // header, h태그
-
-        [{ 'color': [] }, { 'background': [] }],          // 글자색, 글자배겨액
-        [{ 'font': [] }],                                 // 폰트
-        [{ 'align': [] }],                                // 정렬
-
-        ['clean']                                         // 모든 서식 제거
-      ];
-
-      const quillOptions = {
-        // debug: 'info',
-        modules: {
-          toolbar: toolbarOptions
-        },
-        placeholder: '내용을 입력하세요',
-        theme: 'snow'
-      };
-
-      new Quill('#editor', quillOptions);
-    }
-    , []
-  );
+  let month = today.getMonth() + 1;
+  let day = today.getDate();
+  let hours = today.getHours();
+  let minutes = today.getMinutes();
+  let seconds = today.getSeconds();
   
-  const checkForm = async () => {
-    const category = document.querySelector('#category').value;
-    const title = document.querySelector('#title').value;
-    const nickName = document.querySelector('#nickName').value;
-    const content = document.querySelector('#editor').firstChild.innerHTML;    
+  month = month < 10 ? '0' + month : month;
+  day = day < 10 ? '0' + day : day;
+  hours = hours < 10 ? '0' + hours : hours;   
+  minutes = minutes < 10 ? '0' + minutes : minutes; 
+  seconds = seconds < 10 ? '0' + seconds : seconds;
 
-    let formData = {
-      category: category,
-      title: title,
-      nickName: nickName,
-      content : content
+  let date = today.getFullYear() + '-' + month + "-" + day;
+  let time = hours + ':' + minutes + ':' + seconds;
+
+  // quill 툴바
+  const modules = useMemo(() => {
+    return {
+      toolbar: {
+        container: [
+          ['bold', 'italic', 'underline', 'strike'],        // 굵게, 기울이기, 밑줄, 가운데 줄
+          ['blockquote'],                                   // 인용문
+
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          [{ 'indent': '-1' }, { 'indent': '+1' }],         // 내어쓰기 / 들여쓰기
+          [{ 'direction': 'rtl' }],                         // 글 시작지점(좌, 우)
+
+          [{ 'size': ['small', false, 'large', 'huge'] }],  // 글자크기
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],        // header, h태그
+
+          [{ 'color': [] }, { 'background': [] }],          // 글자색, 글자배겨액
+          [{ 'font': [] }],                                 // 폰트
+          [{ 'align': [] }],                                // 정렬
+          ['link', 'image'],
+          ['clean'] 
+        ], 
+      },
+      // handlers: { image: imageHandler },
+      ImageResize: {
+        parchment: Quill.import('parchment')
+      },
     }
+  }, []);
 
-    for (let key in formData) {
-      if (formData[key] === '') return alert('입력창을 확인하세요');
+  // DB에서 post 불러오기 : Read
+  const showPost = async (id) => {
+    try{
+      const response = await fetch(url + '/' + id);
+      const data = await response.json();
+      return data;
+    } catch(error){
+      console.log(error.message);
     }
+  }
 
+  useEffect(() => {
+    if(page === 'update'){
+      const fetchData = async () => {
+        const result = await showPost(post_id);
+        setCategory(result.category);
+        setTitle(result.title);
+        setContent(result.content);
+      };
+      fetchData();
+    }
+  }, [page, post_id]);
+
+  // DB에 저장 : Create
+  const createPost = async (formData) => {
+    //  추후에 이미지를 AWS S3에 저장할 수 있도록 만들기
     try {
-      const response = await axios.post('http://localhost:3300/posts', formData);
+      const response = await axios.post(url, formData);
 
       if (response.status === 201) {
         alert('등록 완료');
@@ -74,47 +107,97 @@ const BoardInput = () => {
     }
   }
 
+  // DB post 수정 : Update
+  const updatePost = async (formData) => {
+    try {
+      const response = await axios.patch(url + '/' + post_id, formData);
+      if (response.status === 200) {
+        alert('수정 완료');
+        navigate('/board');
+      }
+      
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  // 입력확인
+  const checkForm = () => {
+    const quillContent = quillRef.current.getEditor().editor.delta.ops;
+
+    let formData = {
+      category: category,
+      title: title,
+      content: quillContent,
+    }
+
+    for (let key in formData) {
+      if (formData[key] === '' || (key === 'content' && formData[key][0]['insert'] === '\n')) return alert('입력창을 확인하세요');
+    }
+
+    if(page === 'create'){
+      let addData = {
+        user_id : user.id,
+        nickname: user.nickname,
+        views : 0,
+        created_at : date + ' ' + time,
+      }
+      formData = { ...formData, ...addData };
+      createPost(formData);
+
+    } else if(page === 'update') {
+      updatePost(formData);
+    }
+  }  
+
+  const cancelEv = () => {
+    if(page === 'create'){
+      navigate('/board');
+    } else if(page === 'update'){
+      navigate('/board');
+    }
+  }
 
   return (
     <>
-      <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-
-      <div className='container-md board-insert-div' id='board-insert-div'>
+      <div className='container-md' id='board-insert-div'>
         <Form className='input-form' >
           <Form.Group className='mb-3'>
             <Form.Label>카테고리</Form.Label>
-            <Form.Select id='category' name='category' >
+            <Form.Select className='w-25' id='category' name='category' value={category} onChange={event => setCategory(event.target.value)} >
               <option value="">선택하세요</option>
               <option value="후쿠오카">후쿠오카</option>
               <option value="나가사키">나가사키</option>
               <option value="구마모토">구마모토</option>
-              <option value="유후인">유후인</option>
+              <option value="오이타">오이타</option>
               <option value="사가">사가</option>
             </Form.Select>
           </Form.Group>
-          
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor='nickName'>닉네임</Form.Label>
-            <Form.Control type="text" name='nickName' id='nickName' value="닉네임" readOnly  />
-          </Form.Group>
-
+        
           <Form.Group className="mb-3" >
             <Form.Label htmlFor='title'>제목</Form.Label>
-            <Form.Control type='text' name="title" id='title' placeholder="제목을 입력하세요" />
+            <Form.Control type='text' name="title" id='title' placeholder="제목을 입력하세요" value={title} onChange={event => setTitle(event.target.value)} />
           </Form.Group>
 
           <Form.Group className="mb-3" >
             <Form.Label>내용</Form.Label>
-            <div className="text-editor ">
-              <div id="toolbar"></div>
-              <div id="editor" className="editor-textarea"></div>
+            <div>
+              <ReactQuill
+                id='quill-editor'
+                modules={modules}
+                placeholder='내용을 입력하세요...'
+                theme='snow'
+                ref={quillRef}
+                value={page === 'update' ? content : ''}
+                onChange={setContent}
+              />
             </div>
           </Form.Group>
         </Form>
 
-        <div className='btn-div'>
-          <Button variant="outline-warning">취소</Button>
-          <Button variant="outline-secondary" onClick={checkForm}>등록하기</Button>
+        <div className='d-md-flex justify-content-end'>
+          <Button variant="outline-warning" onClick={ cancelEv }>취소</Button>
+          <Button className='ms-3' variant="outline-secondary" onClick={ checkForm } >저장하기</Button>
         </div>
 
       </div>
