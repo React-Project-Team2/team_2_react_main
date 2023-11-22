@@ -10,7 +10,7 @@ const MainPage = () => {
   return (
     <>
       {/* 상단 이미기 갤러리 스페이스*/}
-      <div className='w-auto d-flex justify-content-center align-items-center'>
+      <div className='w-auto d-flex justify-content-center align-items-center' style={{ height: '91vh' }}>
         <div class="container ">
           <ImageGallery path="about" />
         </div>
