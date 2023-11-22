@@ -2,11 +2,13 @@
   max-width: 1000px;
 }
 
-#editor {
-  height: 300px;
+.ql-toolbar {
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
 }
 
-.btn-div {
-  display: flex;
-  justify-content: flex-end;
+.ql-container {
+  min-height: 300px;
+  border-bottom-left-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
 }
