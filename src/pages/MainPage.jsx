@@ -22,7 +22,7 @@ const MainPage = () => {
           <p>sub name</p>
         </div>
       {/* 카테고리 컨테이너 */}
-        <div class="bg-white text-dark container p-0">
+        <div className="bg-white text-dark container p-0 rounded-3">
           <ContainerNavbar />
           <Container>
             <Category
@@ -66,6 +66,8 @@ const MainPage = () => {
               <NewPost/>
             </Row>
           </Container>
+        </div>
+        <div className='pt-5'>
         </div>
       </div>
     </>

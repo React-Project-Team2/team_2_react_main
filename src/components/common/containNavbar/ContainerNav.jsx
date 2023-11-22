@@ -6,12 +6,12 @@ import Navbar from 'react-bootstrap/Navbar';
 
 function ContainerNav() {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="bg-body-tertiary rounded-top">
       <Container fluid>
         <Navbar.Collapse id="navbarScroll">
           <Nav
             className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: '100px' }}
+            style={{ maxHeight: '100  px' }}
             navbarScroll
           >
             <Nav.Link href="/">카테고리</Nav.Link>
