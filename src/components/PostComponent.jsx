@@ -46,7 +46,7 @@ const PostComponent = () => {
             <Row>
               <Col>
                 <Card.Title>{post.title}</Card.Title>
-                <Card.Text>{truncateText(post.content, 123)}</Card.Text>
+                <Card.Text>{truncateText(post.content.map(item => item.insert).join(' '), 123)}</Card.Text>
               </Col>
               <Col>
                 <div className='d-flex justify-content-end mr-3 pt-3'>
