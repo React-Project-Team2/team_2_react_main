@@ -39,6 +39,7 @@ const BoardInput = ({ page }) => {
   let date = today.getFullYear() + '-' + month + "-" + day;
   let time = hours + ':' + minutes + ':' + seconds;
 
+  //  추후에 이미지를 AWS S3에 저장할 수 있도록 만들기
   // quill 툴바
   const modules = useMemo(() => {
     return {
@@ -93,7 +94,7 @@ const BoardInput = ({ page }) => {
 
   // DB에 저장 : Create
   const createPost = async (formData) => {
-    //  추후에 이미지를 AWS S3에 저장할 수 있도록 만들기
+    
     try {
       const response = await axios.post(url, formData);
 
@@ -124,6 +125,7 @@ const BoardInput = ({ page }) => {
   // 입력확인
   const checkForm = () => {
     const quillContent = quillRef.current.getEditor().editor.delta.ops;
+    // const quillContent = quillRef.current.value;
 
     let formData = {
       category: category,
@@ -132,7 +134,11 @@ const BoardInput = ({ page }) => {
     }
 
     for (let key in formData) {
-      if (formData[key] === '' || (key === 'content' && formData[key][0]['insert'] === '\n')) return alert('입력창을 확인하세요');
+        if (formData[key] === '' || (key === 'content' && formData[key][0]['insert'] === '\n')) return alert('입력창을 확인하세요');
+      }
+      
+    for (let key in formData) {
+      if (formData[key] === '') return alert('입력창을 확인하세요');
     }
 
     if(page === 'create'){
@@ -154,13 +160,13 @@ const BoardInput = ({ page }) => {
     if(page === 'create'){
       navigate('/board');
     } else if(page === 'update'){
-      navigate('/board');
+      navigate('/board/' + post_id);
     }
   }
 
   return (
     <>
-      <div className='container-md' id='board-insert-div'>
+      <div className='container-md py-3' id='board-insert-div'>
         <Form className='input-form' >
           <Form.Group className='mb-3'>
             <Form.Label>카테고리</Form.Label>
@@ -188,7 +194,7 @@ const BoardInput = ({ page }) => {
                 placeholder='내용을 입력하세요...'
                 theme='snow'
                 ref={quillRef}
-                value={page === 'update' ? content : ''}
+                value={content}
                 onChange={setContent}
               />
             </div>

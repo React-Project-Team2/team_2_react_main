@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 
 function ContainerNav() {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="bg-body-tertiary rounded-top">
       <Container fluid>
         <Navbar.Collapse id="navbarScroll">
           <Nav
