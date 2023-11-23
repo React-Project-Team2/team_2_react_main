@@ -17,6 +17,7 @@ const PostPage = () => {
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [nickname, setNickname] = useState('');
+  const [createdAt, setCreatedAt] = useState('');
   const [postData, setPostData] = useState(null);
 
   const modules = useMemo(() => {
@@ -44,6 +45,7 @@ const PostPage = () => {
       setTitle(result.title);
       setNickname(result.nickname);
       setContent(result.content);
+      setCreatedAt(result.created_at);
 
       console.log(result);
     }
@@ -61,6 +63,7 @@ const PostPage = () => {
               <Col xs={9}>
                   <div className='d-flex flex-column p-3'>
                     <div><span>{nickname}</span></div>
+                    <div><span>{createdAt}</span></div>
                     <div><span>{title}</span></div>
                     <div><span >{category}</span></div>
                     <ReactQuill
