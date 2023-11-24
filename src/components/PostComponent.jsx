@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import BoardPagination from './BoardPagination.jsx';
@@ -7,6 +8,12 @@ const PostComponent = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+
+  const navigate = useNavigate();
+
+  const goToDetailPage = (post_id) => {
+    navigate(`/board/${post_id}`);
+  };
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -45,8 +52,12 @@ const PostComponent = () => {
           <Card.Body>
             <Row>
               <Col>
-                <Card.Title>{post.title}</Card.Title>
-                <Card.Text>{truncateText(post.content.map(item => item.insert).join(' '), 123)}</Card.Text>
+                <Card.Title onClick={() => goToDetailPage(post.id)} style={{cursor: "pointer"}}>
+                  {post.title}
+                </Card.Title>
+                <Card.Text>
+                  {truncateText(post.content.map(item => item.insert).join(' '), 123)}
+                </Card.Text>
               </Col>
               <Col>
                 <div className='d-flex justify-content-end mr-3 pt-3'>
