@@ -17,7 +17,7 @@ const PostComponent = () => {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:3100/posts`, {
+      const response = await axios.get(`http://localhost:3300/posts`, {
         params: {
           _page: currentPage,
           _limit: 10
