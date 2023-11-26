@@ -6,6 +6,7 @@ import ReactQuill from 'react-quill';
 // import 'react-quill/dist/quill.snow.css';
 import ContainerNavbar from '../components/common/containNavbar/ContainerNav'
 import '../styles/PostPage.css';
+import CommentList from '../components/CommentList';
 
 const PostPage = () => {
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ const PostPage = () => {
                     />
                   </div>
                   <div className='container'>
-                    댓글
+                    <CommentList postId={post_id} />
                   </div>
               </Col>
               <Col xs={3}>
