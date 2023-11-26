@@ -8,6 +8,7 @@ const PostComponent = () => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [commentCounts, setCommentCounts] = useState({});
 
   const navigate = useNavigate();
 
@@ -45,6 +46,27 @@ const PostComponent = () => {
     return text;
   };
 
+  useEffect(() => {
+    const fetchCommentCounts = async () => {
+      const counts = {};
+
+      for (const post of posts) {
+        try {
+          const response = await axios.get(
+            `http://localhost:3300/posts/${post.id}/comments`
+          );
+          counts[post.id] = response.data.length;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      setCommentCounts(counts);
+    };
+
+    fetchCommentCounts();
+  }, [posts]);
+
   return (
     <Container>
       {posts.map((post) => (
@@ -67,7 +89,7 @@ const PostComponent = () => {
                   </div>
                   <div>
                     <img src='https://cdn.icon-icons.com/icons2/37/PNG/32/comments_3979.png' width='20px' alt='댓글' />
-                    {/* {post.comments.length} */}
+                    {commentCounts[post.id]}
                   </div>
                 </div>
               </Col>
