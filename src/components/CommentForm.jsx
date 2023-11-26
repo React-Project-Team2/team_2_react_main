@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import '../styles/CommentForm.css'
 
 const CommentForm = ({ postId, onCommentSubmit }) => {
     const [text, setText] = useState('');
@@ -21,21 +22,16 @@ const CommentForm = ({ postId, onCommentSubmit }) => {
     };
 
     return (
-        <Form onSubmit={handleSubmit} className='mt-3'>
-            <Form.Group as={Row}>
-                <Col sm={10}>
-                    <Form.Control
-                        type="text"
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                    />
-                </Col>
-                <Col sm={2} className="text-right">
-                    <Button type="submit">
-                        댓글 작성
-                    </Button>
-                </Col>
-            </Form.Group>
+        <Form onSubmit={handleSubmit} className='mt-3 comment-form-group'>
+            <Form.Control
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                className='comment-form-input'
+            />
+            <Button type="submit" className='ms-3'>
+                댓글 작성
+            </Button>
         </Form>
     );
 };

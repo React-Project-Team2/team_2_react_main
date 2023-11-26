@@ -34,7 +34,7 @@ const Comment = ({ comment, postId, onCommentChange }) => {
         <Card className='rounded-0'>
             <Card.Body>
                 {isEdit ? (
-                    <Form.Group className='edit-container'>
+                    <Form.Group className='comment-edit-container'>
                         <Form.Control as='textarea' value={editedComment} onChange={e => setEditedComment(e.target.value)} />
                         <Button variant='success' onClick={handleSave}>저장</Button>
                     </Form.Group>
