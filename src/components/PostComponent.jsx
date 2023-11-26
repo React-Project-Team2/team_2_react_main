@@ -62,11 +62,11 @@ const PostComponent = () => {
               <Col>
                 <div className='d-flex justify-content-end mr-3 pt-3'>
                   <div>
-                    <img src='조회수 이미지 경로' alt='조회수' />
+                    <img src='https://cdn.pixabay.com/photo/2016/12/18/11/04/eye-1915455_1280.png' width='27px' alt='조회수' />
                     {/* {post.views} */}
                   </div>
                   <div>
-                    <img src='댓글 이미지 경로' alt='댓글' />
+                    <img src='https://cdn.icon-icons.com/icons2/37/PNG/32/comments_3979.png' width='20px' alt='댓글' />
                     {/* {post.comments.length} */}
                   </div>
                 </div>
