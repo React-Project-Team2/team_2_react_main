@@ -28,7 +28,7 @@ const CommentList = ({ postId }) => {
         </ListGroup.Item>
         {comments.map((comment) => (
           <ListGroup.Item key={comment.id} className='p-0 list-item'>
-            <Comment comment={comment} />
+            <Comment comment={comment} postId={postId} onCommentChange={fetchComments} />
           </ListGroup.Item>
         ))}
       </ListGroup>
