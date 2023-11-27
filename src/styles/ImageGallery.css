@@ -3,10 +3,12 @@
     overflow: hidden;
     padding: 8px;
   }
+
   .gal-item .box{
     height: 100%;
     overflow: hidden;
   }
+
   .box img{
     object-fit:cover;
     cursor: pointer;
@@ -23,18 +25,20 @@
 
   .box-1 img {
     width: 100%;
-    height: 390px;
+    height: 340px;
   }
   
   .box-2 img{
     width: 100%;
-    height: 376px;
+    height: 326px;
   }
+
   .box-4 img{
     width: 100%;
-    height: 200px;
+    height: 150px;
   }
+
   .box-5 img {
     width: 100%;
-    height: 579px;
+    height: 529px;
   }
