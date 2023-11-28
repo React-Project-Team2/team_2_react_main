@@ -7,7 +7,7 @@ import ReactQuill from 'react-quill';
 // import 'react-quill/dist/quill.snow.css';
 import ContainerNavbar from '../components/common/containNavbar/ContainerNav'
 import '../styles/PostPage.css';
-import axios from 'axios';
+import CommentList from '../components/CommentList';
 
 const PostPage = () => {
   const navigate = useNavigate();
@@ -84,28 +84,20 @@ const PostPage = () => {
             {/* 게시글 */}
             <Row>
               <Col xs={9}>
-                <div className='d-flex flex-column'>
-                  <Row className='d-flex mb-4'>
-                    <Col xs={9} >
-                      <div className='fs-3 fw-bolder'><span>{title}</span></div>
-                      <div className='fs-6 fw-lighter text-body-secondary'><span>{category}</span></div>
-                    </Col>
-                    <Col xs={3} className='d-flex flex-column justify-content-end' >
-                      <div><span className='fs-6 fw-lighter text-body-secondary' >{nickname}</span></div>
-                      <div><span className='fs-6 fw-lighter text-body-secondary'>{createdAt}</span></div>
-                    </Col>
-                  </Row>
-                  <ReactQuill
-                    id='quill-editor'
-                    modules={modules}
-                    placeholder='내용을 입력하세요...'
-                    value={content}
-                    readOnly
-                  />
-                </div>
-                <div className='container'>
-                  댓글
-                </div>
+                  <div className='d-flex flex-column p-3'>
+                    <div><span>{nickname}</span></div>
+                    <div><span>{title}</span></div>
+                    <div><span >{category}</span></div>
+                    <ReactQuill
+                      id='quill-editor'
+                      modules={modules}
+                      placeholder='내용을 입력하세요...'
+                      value={content}
+                    />
+                  </div>
+                  <div className='container'>
+                    <CommentList postId={post_id} />
+                  </div>
               </Col>
               {/* 사이드 */}
               <Col xs={3}>
