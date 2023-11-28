@@ -1,9 +1,8 @@
 import React from 'react'
 import '../styles/MainPage.css'
 import ImageGallery from '../components/common/imageGallery/ImageGallery'
-import ContainerNavbar from '../components/common/containNavbar/ContainerNav'
 import Category from '../components/common/category/Category'
-import { Container, Row } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import NewPost from '../components/common/category/NewPost'
 
 const MainPage = () => {
@@ -23,8 +22,10 @@ const MainPage = () => {
         </div>
       {/* 카테고리 컨테이너 */}
         <div className="bg-white text-dark container p-0 rounded-3">
-          <ContainerNavbar />
           <Container>
+            <Row className='p-4'>
+              <h4>Category</h4>
+            </Row>
             <Category
               name = "Hukuoka" 
               img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
@@ -55,12 +56,10 @@ const MainPage = () => {
               detail='1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
               postCount= '5'
             />
-          </Container>
-          <Container className='pb-3'>
             <Row>
-              <h6 className='px-5 pt-5 pb-3'>신규 게시물</h6>
+              <h6 className='px-5 p-4'>신규 게시물</h6>
             </Row>
-            <Row className='p-3'>
+            <Row className='pb-5'>
               <NewPost/>
               <NewPost/>
               <NewPost/>

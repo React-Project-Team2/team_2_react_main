@@ -1,18 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../../../styles/ImageGallery.css'
 import { useNavigate } from 'react-router-dom'
 import { Col, Row } from 'react-bootstrap'
 
 const ImageGallery = ({path}) => {
   const navigate = useNavigate()
-  
+
   return (
     <Row>
       <Col className='col-md-8 col-sm-12 co-xs-12'>
         <Row className=" gal-item" onClick={() => navigate(`/${path}`)}>
-        <div className="box-1 box">
-          <img src="https://www.his-j.com/kokunai/kanto/tour_info/okinawa/catchy/wp-content/uploads/2021/02/post_10242_01-730x410.jpg" className="img-ht img-fluid rounded" />
-        </div>
+          <Col className="box-1 box">
+            <div className='link-box rounded'>
+              <div className='slide-box'>
+                <h3 className='p-5 text-white bg-dark'>About</h3>
+              </div>
+              <img src="https://www.his-j.com/kokunai/kanto/tour_info/okinawa/catchy/wp-content/uploads/2021/02/post_10242_01-730x410.jpg" className="img-ht img-fluid " />
+            </div>
+          </Col>
         </Row>
         <Row >
           <Col className="gal-item">

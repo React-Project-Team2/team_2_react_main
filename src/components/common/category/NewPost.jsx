@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const NewPost = () => {
     return (
-        <Col className='mx-5'>
+        <Col className='mx-5 pb-2'>
             <Link to="/post/posts" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <h6><b>user_name</b></h6>
                 <h8>create_at</h8>
