@@ -20,9 +20,11 @@ const BoardPage = () => {
             <h1>현지 학기제</h1>
             <h3>sub name</h3>
           </div>
-          <div className="bg-white container p-0 white-board">
+          <Container className="bg-white p-0 white-board">
             <ContainerNavbar />
-            <img src="https://www.his-j.com/kokunai/kanto/tour_info/okinawa/catchy/wp-content/uploads/2021/02/post_10242_01-730x410.jpg" className="img-ht img-fluid rounded" alt='' />
+            <div className='img-box'>
+              <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="img-ht img-fluid rounded" alt='' />
+            </div>
             <Container className='my-3 ms-4'>
               <Row>
                 <Col xs={2} className='border-end text-center'>
@@ -36,7 +38,7 @@ const BoardPage = () => {
               </Row>
             </Container>
             <PostComponent />
-          </div>
+          </Container>
         </div>
       </div>
     </>

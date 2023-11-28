@@ -6,3 +6,13 @@
   box-sizing: content-box;
   height: 2000px;
 }
+
+.img-box{
+  height: 400px;
+}
+
+.img-ht {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

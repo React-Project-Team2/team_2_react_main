@@ -1,11 +1,12 @@
 import { React, useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from 'react-bootstrap'
+import { Button, Row, Col, Container } from 'react-bootstrap'
 import ReactQuill from 'react-quill';
 // import ImageResize from 'quill-image-resize';
 // import 'react-quill/dist/quill.snow.css';
 import ContainerNavbar from '../components/common/containNavbar/ContainerNav'
 import '../styles/PostPage.css';
+import CommentList from '../components/CommentList';
 
 const PostPage = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const PostPage = () => {
 
   const modules = useMemo(() => {
     return {
-      toolbar: false 
+      toolbar: false
     }
   }, []);
 
@@ -49,26 +50,43 @@ const PostPage = () => {
     }
     showResult();
   }, [post_id]);
-  
+
   return (
     <>
-      <div className="bg-white text-dark container p-0">
-        <ContainerNavbar />
-        <div className='d-flex flex-column p-3'>
-          <div><span>{ nickname }</span></div>
-          <div><span>{ title }</span></div>
-          <div><span >{ category }</span></div>
-          <ReactQuill
-            id='quill-editor'
-            modules={modules}
-            placeholder='내용을 입력하세요...'
-            value={content}
-          />
+      <div className='w-auto bg'>
+        {/* 카테고리 컨테이너 */}
+        <div className="bg-white text-dark container p-0 rounded-3">
+          <ContainerNavbar />
+          <Container>
+            <Row>
+              <Col xs={9}>
+                  <div className='d-flex flex-column p-3'>
+                    <div><span>{nickname}</span></div>
+                    <div><span>{title}</span></div>
+                    <div><span >{category}</span></div>
+                    <ReactQuill
+                      id='quill-editor'
+                      modules={modules}
+                      placeholder='내용을 입력하세요...'
+                      value={content}
+                    />
+                  </div>
+                  <div className='container'>
+                    <CommentList postId={post_id} />
+                  </div>
+              </Col>
+              <Col xs={3}>
+                  side
+              </Col>
+            </Row>
 
-          <div className='d-md-flex justify-content-end'>
-            <Button variant="outline-warning" onClick={() => navigate('/board') } >돌아가기</Button>
-            <Button className='ms-3' variant="outline-secondary" onClick={() => navigate('/board/update/' + post_id) } >수정하기</Button>
-          </div>
+            <div className='d-md-flex justify-content-end'>
+              <Button variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
+              <Button className='ms-3' variant="outline-secondary" onClick={() => navigate('/board/update/' + post_id)} >수정하기</Button>
+            </div>
+          </Container>
+        </div>
+        <div className='pt-5'>
         </div>
       </div>
     </>
