@@ -1,0 +1,26 @@
+.comment-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: pre-wrap; /* 엔터키 줄바꿈 유지 */
+}
+
+.comment-container .button-group button {
+  margin-left: 10px;
+}
+
+.comment-edit-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-edit-container button {
+  margin-left: 10px;
+}
+
+.comment-edit-container textarea {
+  flex: 1; /* textarea의 크기를 최대로 고정해서 옆의 버튼이 커지지 않게 조정 */
+  resize: none;
+  overflow: auto;
+}
