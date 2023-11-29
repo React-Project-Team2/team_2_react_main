@@ -1,7 +1,7 @@
 import { React, useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, Container } from 'react-bootstrap'
-import { Eye } from 'react-bootstrap-icons';
+import { Eye, ChatRight } from 'react-bootstrap-icons';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
 // import ImageResize from 'quill-image-resize';
@@ -17,8 +17,8 @@ const PostPage = () => {
   const url = 'http://localhost:3300/';
 
   const { post_id } = useParams();
-  const [commentsCount, setCommentsCount] = useState('');
   const [postData, setPostData] = useState({});
+  const [commentsCount, setCommentsCount] = useState('');
   const [showModal, setShowModal] = useState(false);
 
   const modules = useMemo(() => {
@@ -54,6 +54,7 @@ const PostPage = () => {
       }
     }
 
+    // 조회수 증가
     const updateViews = async (v) => {
       let updateData = { views: v + 1 }
       try {
@@ -70,7 +71,7 @@ const PostPage = () => {
     document.querySelector('.ql-container').style.border = 'none';
   }, [post_id]);
 
-
+  // ConfirmModal 결과
   const flagResult = (flag) => {
     if (flag) {
       // 사용자가 확인 버튼을 클릭했을 때 게시글 삭제 동작 수행
@@ -88,6 +89,7 @@ const PostPage = () => {
     }
   }
 
+  // 게시글 삭제
   const deletePost = async (id) => {
     setShowModal(false);
     try {
@@ -102,6 +104,18 @@ const PostPage = () => {
   } 
 
   console.log(postData);
+
+  const getComments = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3300/comments`);
+      const postComments = response.data.filter(comment => comment.postId === post_id);
+      setCommentsCount(postComments.length);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  getComments();
 
   return (
     <>
@@ -138,8 +152,9 @@ const PostPage = () => {
               </Col>
               {/* 사이드 */}
               <Col xs={3}>
-                <div>
-                  <div><Eye /><span>{ postData.views }</span></div>
+                <div className='mb-3'>
+                  <div><Eye className='me-2' /><span>{ postData.views } views</span></div>
+                  <div><ChatRight className='me-2' /><span>{ commentsCount } comments</span></div>
                 </div>
                 <div className='d-md-flex flex-column'>
                   <Button className='mb-2' variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
