@@ -1,32 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
-const ConfirmModal = ({ onFlag, text }) => {
-  const [show, setShow] = useState(false);
+const ConfirmModal = ({ onFlag, title, text, show }) => {
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  handleShow();
-
-  onFlag(show);
+  const handleClose = () => onFlag(false);
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={ handleClose }>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{ title }</Modal.Title>
         </Modal.Header>
         <Modal.Body>{ text }</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={ () => onFlag(false) }>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Button variant="primary" onClick={() => onFlag(true)}>
+            Delete
           </Button>
         </Modal.Footer>
       </Modal>
