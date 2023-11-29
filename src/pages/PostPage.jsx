@@ -3,11 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Row, Col, Container } from 'react-bootstrap'
 import { Eye } from 'react-bootstrap-icons';
 import ReactQuill from 'react-quill';
+import axios from 'axios';
 // import ImageResize from 'quill-image-resize';
 // import 'react-quill/dist/quill.snow.css';
 import ContainerNavbar from '../components/common/containNavbar/ContainerNav'
 import '../styles/PostPage.css';
 import CommentList from '../components/CommentList';
+import ConfirmModal from '../components/common/modals/ConfirmModal';
 
 const PostPage = () => {
   const navigate = useNavigate();
@@ -15,14 +17,11 @@ const PostPage = () => {
   const url = 'http://localhost:3300/posts';
 
   const { post_id } = useParams();
-  const [content, setContent] = useState('');
-  const [category, setCategory] = useState('');
-  const [title, setTitle] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [createdAt, setCreatedAt] = useState('');
-  const [views, setViews] = useState('');
+  // const [views, setViews] = useState('');
   const [commentsCount, setCommentsCount] = useState('');
-  const [postData, setPostData] = useState(null);
+  const [postData, setPostData] = useState({});
+  const [showModal, setShowModal] = useState(false);
+
 
   const modules = useMemo(() => {
     return {
@@ -37,42 +36,58 @@ const PostPage = () => {
       try {
         const response = await fetch(url + '/' + id);
         const data = await response.json();
-        return data;
+        setPostData(data);
+
+        // 조회 이력
+        const viewedPost = localStorage.getItem('viewedPosts');
+        // 조회 이력이 없으면 빈 배열 생성
+        let viewedPostsArray = viewedPost ? JSON.parse(viewedPost) : [];
+        // post_id가 없으면
+        if (!viewedPostsArray.includes(post_id)) {
+          // 조회수 수정
+          await updateViews(data.views);
+          // post_id 배열에 넣기
+          viewedPostsArray.push(post_id);
+          // localStorage에 viewedPosts로 생성
+          localStorage.setItem('viewedPosts', JSON.stringify(viewedPostsArray));
+        } 
+
       } catch (error) {
         console.log(error.message);
       }
     }
 
     const updateViews = async (v) => {
-      let updateData = { views: v }
-      console.log(updateData);
+      let updateData = { views: v + 1 }
       try {
         const response = await axios.patch(url + '/' + post_id, updateData);
         const list = response.data;
-        console.log(list);
-        setViews(list.views + 1);
         setPostData(list);  
       } catch (error) {
         console.log(error.message);
       }
     }
 
-    const showResult = async () => {
-      const result = await showPost(post_id);
-      setCategory(result.category);
-      setTitle(result.title);
-      setNickname(result.nickname);
-      setContent(result.content);
-      setCreatedAt(result.created_at);
+    showPost(post_id);
 
-      // 조회수 수정
-      updateViews(result.views + 1);
-
-    }
-    showResult();
     document.querySelector('.ql-container').style.border = 'none';
   }, [post_id]);
 
+  const flagResult = (flag) => {
+    if (flag) {
+      // 사용자가 확인 버튼을 클릭했을 때 게시글 삭제 등의 동작 수행
+    } else {
+      // 사용자가 취소 버튼을 클릭했을 때 모달 닫기
+      setShowModal(false);
+    }
+  }
+
+  const deletePost = (id) => {
+    setShowModal(true);
+
+  }
+
+  console.log(postData);
 
   return (
     <>
@@ -84,17 +99,25 @@ const PostPage = () => {
             {/* 게시글 */}
             <Row>
               <Col xs={9}>
-                  <div className='d-flex flex-column p-3'>
-                    <div><span>{nickname}</span></div>
-                    <div><span>{title}</span></div>
-                    <div><span >{category}</span></div>
-                    <ReactQuill
-                      id='quill-editor'
-                      modules={modules}
-                      placeholder='내용을 입력하세요...'
-                      value={content}
-                    />
-                  </div>
+                <div className='d-flex flex-column'>
+                  <Row className='d-flex mb-4'>
+                    <Col xs={9} >
+                      <div className='fs-3 fw-bolder'><span>{postData.title}</span></div>
+                      <div className='fs-6 fw-lighter text-body-secondary'><span>{postData.category}</span></div>
+                    </Col>
+                    <Col xs={3} className='d-flex flex-column justify-content-end' >
+                      <div><span className='fs-6 fw-lighter text-body-secondary' >{postData.nickname}</span></div>
+                      <div><span className='fs-6 fw-lighter text-body-secondary'>{postData.created_at}</span></div>
+                    </Col>
+                  </Row>
+                  <ReactQuill
+                    id='quill-editor'
+                    modules={modules}
+                    placeholder='내용을 입력하세요...'
+                    value={postData.content}
+                    readOnly
+                  />
+                </div>
                   <div className='container'>
                     <CommentList postId={post_id} />
                   </div>
@@ -102,15 +125,23 @@ const PostPage = () => {
               {/* 사이드 */}
               <Col xs={3}>
                 <div>
-                  <div><Eye /><span>{ views }</span></div>
+                  <div><Eye /><span>{ postData.views }</span></div>
+                </div>
+                <div className='d-md-flex flex-column'>
+                  <Button className='mb-2' variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
+                  {
+                    user.id === postData.user_id ? <>
+                      <Button className='mb-2' variant="outline-secondary" onClick={() => navigate('/board/update/' + post_id)} >수정하기</Button>
+                      <Button variant="outline-danger" onClick={() => { deletePost(post_id) } }  >삭제하기</Button>
+                    </> : ''
+                  }
+                  {
+                    showModal && <ConfirmModal onFlag={flagResult} text="정말 삭제하시겠습니까?" />
+                  }
                 </div>
               </Col>
             </Row>
 
-            <div className='d-md-flex justify-content-end'>
-              <Button variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
-              <Button className='ms-3' variant="outline-secondary" onClick={() => navigate('/board/update/' + post_id)} >수정하기</Button>
-            </div>
           </Container>
         </div>
         <div className='pt-5'>
