@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import '../styles/CommentForm.css'
 
-const CommentForm = ({ postId, onCommentSubmit }) => {
+const CommentForm = ({ postId, user, onCommentSubmit }) => {
+    let userId = 'abcd';
+    if (user !== null) userId = user.userId;
+
     const [text, setText] = useState('');
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
         try {
             await axios.post('http://localhost:3300/comments', {
                 postId,
+                userId,
                 text,
+                // created_at, // 생성일자
             });
             setText('');
             onCommentSubmit();

@@ -4,16 +4,21 @@ import CommentForm from './CommentForm';
 import axios from 'axios';
 import { ListGroup, Pagination } from 'react-bootstrap';
 
-const CommentList = ({ postId }) => {
+const CommentList = ({ postId, user }) => {
   const [comments, setComments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const commentsPerPage = 5;
+  const commentsPerPage = 10;
 
   const fetchComments = async () => {
     try {
       const response = await axios.get(`http://localhost:3300/comments`);
       const postComments = response.data.filter(comment => comment.postId === postId);
       setComments(postComments);
+
+      // 현재 페이지에 댓글이 없으면 이전 페이지로 이동
+      if (postComments.length <= (currentPage - 1) * commentsPerPage) {
+        setCurrentPage((prev) => prev - 1 || 1);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -38,11 +43,14 @@ const CommentList = ({ postId }) => {
     );
   }
 
+  console.log(user)
+
   return (
     <>
+      <CommentForm postId={postId} user={user} onCommentSubmit={fetchComments} />
       <ListGroup >
         <ListGroup.Item className='p-2 text-muted'>
-          {comments.length > 0 ? `댓글 수: ${comments.length}` : '댓글이 없습니다.'}
+          {comments.length > 0 ? `댓글: ${comments.length}` : '댓글이 없습니다.'}
         </ListGroup.Item>
         {comments.slice((currentPage - 1) * commentsPerPage, currentPage * commentsPerPage).map((comment) => (
           <ListGroup.Item key={comment.id} className='p-0 list-item'>
@@ -51,7 +59,6 @@ const CommentList = ({ postId }) => {
         ))}
       </ListGroup>
       <Pagination className="justify-content-center mt-2">{items}</Pagination>
-      <CommentForm postId={postId} onCommentSubmit={fetchComments} />
     </>
   );
 }

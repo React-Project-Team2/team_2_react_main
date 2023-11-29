@@ -72,7 +72,7 @@ const PostPage = () => {
                     />
                   </div>
                   <div className='container'>
-                    <CommentList postId={post_id} />
+                    <CommentList postId={post_id} user={user} />
                   </div>
               </Col>
               <Col xs={3}>
