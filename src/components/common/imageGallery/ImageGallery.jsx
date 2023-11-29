@@ -13,7 +13,10 @@ const ImageGallery = ({path}) => {
           <Col className="box-1 box">
             <div className='link-box rounded'>
               <div className='slide-box'>
-                <h3 className='p-5 text-white bg-dark'>About</h3>
+                <h3 className='p-4 text-white bg-dark'>About</h3>
+                <p className='px-4 text-white'>
+                  textarea 
+                </p>
               </div>
               <img src="https://www.his-j.com/kokunai/kanto/tour_info/okinawa/catchy/wp-content/uploads/2021/02/post_10242_01-730x410.jpg" className="img-ht img-fluid " />
             </div>
