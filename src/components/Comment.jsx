@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Button, Card, Form, Dropdown, Modal } from 'react-bootstrap';
+import { Button, Card, Form, Dropdown } from 'react-bootstrap';
+import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import '../styles/Comment.css'
 import ConfirmModal from '../components/common/modals/ConfirmModal';
 
@@ -98,7 +99,7 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
                         <Card.Text>{comment.created_at}</Card.Text>
                         {user.userId === comment.userId ? (
                             <Dropdown>
-                                <Dropdown.Toggle variant='primary' id='dropdown-basic'>더보기</Dropdown.Toggle>
+                                <Dropdown.Toggle as={ThreeDotsVertical} variant='primary' id='dropdown-basic'>더보기</Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     <Dropdown.Item onClick={handleEdit}>수정</Dropdown.Item>
                                     <Dropdown.Item onClick={handleDelete}>삭제</Dropdown.Item>
