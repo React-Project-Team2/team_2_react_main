@@ -18,7 +18,7 @@ const PostPage = () => {
 
   const { post_id } = useParams();
   const [postData, setPostData] = useState({});
-  const [commentsCount, setCommentsCount] = useState('');
+  const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
   const modules = useMemo(() => {
@@ -47,7 +47,7 @@ const PostPage = () => {
           viewedPostsArray.push(post_id);
           // localStorage에 viewedPosts로 생성
           localStorage.setItem('viewedPosts', JSON.stringify(viewedPostsArray));
-        } 
+        }
 
       } catch (error) {
         console.log(error.message);
@@ -60,7 +60,7 @@ const PostPage = () => {
       try {
         const response = await axios.patch(url + 'posts/' + post_id, updateData);
         const list = response.data;
-        setPostData(list);  
+        setPostData(list);
       } catch (error) {
         console.log(error.message);
       }
@@ -79,7 +79,7 @@ const PostPage = () => {
 
       const viewedPost = localStorage.getItem('viewedPosts');
       let viewedPostsArray = JSON.parse(viewedPost);
-      let updateViewedPostsArray = viewedPostsArray.filter((element) =>  element !== post_id );
+      let updateViewedPostsArray = viewedPostsArray.filter((element) => element !== post_id);
       localStorage.setItem('viewedPosts', JSON.stringify(updateViewedPostsArray));
 
       navigate('/board');
@@ -93,29 +93,37 @@ const PostPage = () => {
   const deletePost = async (id) => {
     setShowModal(false);
     try {
+      deleteComments(comments);
       const response = await axios.delete(url + 'posts/' + id);
       console.log(response);
       if (response.status === 200) {
         alert('삭제 완료');
-      } 
+      }
     } catch (error) {
       console.log(error.message);
     }
-  } 
+  }
 
   console.log(postData);
 
-  const getComments = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3300/comments`);
-      const postComments = response.data.filter(comment => comment.postId === post_id);
-      setCommentsCount(postComments.length);
-    } catch (error) {
-      console.error(error);
+  // CommentList에서 Comments 받기
+  const getCommentList = (data) => {
+    if (data) {
+      console.log(data);
+      setComments(data);
     }
-  };
+  }
 
-  getComments();
+  // 댓글 삭제
+  const deleteComments = async (data) => {
+    try {
+      for (let comment of data) {
+        await axios.delete(url + 'comments/' + comment.id);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   return (
     <>
@@ -146,22 +154,22 @@ const PostPage = () => {
                     readOnly
                   />
                 </div>
-                  <div className='container'>
-                    <CommentList postId={post_id} />
-                  </div>
+                <div className='container'>
+                  <CommentList postId={post_id} onData={getCommentList} user={user} />
+                </div>
               </Col>
               {/* 사이드 */}
               <Col xs={3}>
                 <div className='mb-3'>
-                  <div><Eye className='me-2' /><span>{ postData.views } views</span></div>
-                  <div><ChatRight className='me-2' /><span>{ commentsCount } comments</span></div>
+                  <div><Eye className='me-2' /><span>{postData.views} views</span></div>
+                  <div><ChatRight className='me-2' /><span>{comments.length} comments</span></div>
                 </div>
                 <div className='d-md-flex flex-column'>
                   <Button className='mb-2' variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
                   {
-                    user.id === postData.user_id ? <>
+                    (user === null || user.id === postData.user_id) ? <>
                       <Button className='mb-2' variant="outline-secondary" onClick={() => navigate('/board/update/' + post_id)} >수정하기</Button>
-                      <Button variant="outline-danger" onClick={() => setShowModal(true) }  >삭제하기</Button>
+                      <Button variant="outline-danger" onClick={() => setShowModal(true)}  >삭제하기</Button>
                     </> : ''
                   }
                   {
