@@ -31,6 +31,7 @@ const CommentList = ({ postId, onData, user }) => {
     try {
       const response = await axios.get(`http://localhost:3300/comments?postId=${postId}&_sort=created_at&_order=desc`);
       setComments(response.data);
+      onData(response.data);
 
       // 현재 페이지에 댓글이 없으면 이전 페이지로 이동
       if (response.data.length <= (currentPage - 1) * commentsPerPage) {
