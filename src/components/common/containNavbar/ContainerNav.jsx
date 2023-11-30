@@ -14,7 +14,7 @@ function ContainerNav() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="/">카테고리</Nav.Link>
+            <Nav.Link href="#">카테고리</Nav.Link>
             <Nav.Link href="/board">게시판</Nav.Link>
             <Nav.Link href="/myBoard">내 게시판</Nav.Link>
           </Nav>
