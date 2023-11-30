@@ -97,7 +97,7 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
                         <Card.Title>{comment.userId}</Card.Title>
                         <Card.Text>{comment.text}</Card.Text>
                         <Card.Text>{comment.created_at}</Card.Text>
-                        {user.userId === comment.userId ? (
+                        {user === null || user.userId === comment.userId ? (
                             <Dropdown>
                                 <Dropdown.Toggle as={ThreeDotsVertical} variant='primary' id='dropdown-basic'>더보기</Dropdown.Toggle>
                                 <Dropdown.Menu>
