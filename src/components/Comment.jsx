@@ -48,6 +48,7 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
                 postId,
                 text: editedComment,
                 userId: user.userId,
+                userNickname: user.userNickname,
                 created_at,
             });
             setIsEdit(false);
@@ -93,7 +94,7 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
                 </Form.Group>
             ) : (
                 <div className='comment-container ps-2'>
-                    <p className='comment-nickname'>{comment.userId}</p>
+                    <p className='comment-nickname'>{comment.userNickname}</p>
                     <p className='comment-created-at'>{comment.created_at}</p>
                     <p className='comment-text'>{comment.text}</p>
 
