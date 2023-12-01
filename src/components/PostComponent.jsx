@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import { Eye, ChatRight } from 'react-bootstrap-icons';
 import axios from 'axios';
-import BoardPagination from './BoardPagination.jsx';
+import PaginationComponent from './PaginationComponent';  
 
 const PostComponent = () => {
   const [posts, setPosts] = useState([]);
@@ -101,7 +101,11 @@ const PostComponent = () => {
         </Card>
       ))}
       <div className="d-flex justify-content-center">
-        <BoardPagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        <PaginationComponent 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          handlePageChange={handlePageChange}
+        />
       </div>
     </Container>
   );
