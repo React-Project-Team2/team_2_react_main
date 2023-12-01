@@ -21,23 +21,27 @@ const BoardInput = ({ page }) => {
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
+  const [postData, setPostData] = useState({});
 
   const today = new Date();
 
-  let month = today.getMonth() + 1;
-  let day = today.getDate();
-  let hours = today.getHours();
-  let minutes = today.getMinutes();
-  let seconds = today.getSeconds();
-  
-  month = month < 10 ? '0' + month : month;
-  day = day < 10 ? '0' + day : day;
-  hours = hours < 10 ? '0' + hours : hours;   
-  minutes = minutes < 10 ? '0' + minutes : minutes; 
-  seconds = seconds < 10 ? '0' + seconds : seconds;
+  const month = (today.getMonth() + 1).toString().padStart(2, '0'); // 2자리보다 짧으면 0을 붙인다
+  const day = today.getDate().toString().padStart(2, '0');
+  const hours = today.getHours().toString().padStart(2, '0');
+  const minutes = today.getMinutes().toString().padStart(2, '0');
+  const seconds = today.getSeconds().toString().padStart(2, '0');
 
-  let date = today.getFullYear() + '-' + month + "-" + day;
-  let time = hours + ':' + minutes + ':' + seconds;
+  const date = `${today.getFullYear()}-${month}-${day}`;
+  const time = `${hours}:${minutes}:${seconds}`;
+
+  const checkUser = () => {
+    if (user === null) {
+      alert('로그인 후 이용가능 합니다.')
+      navigate('/signIn');
+    }
+  }
+
+  checkUser();
 
   //  추후에 이미지를 AWS S3에 저장할 수 있도록 만들기
   // quill 툴바
@@ -59,8 +63,8 @@ const BoardInput = ({ page }) => {
           [{ 'font': [] }],                                 // 폰트
           [{ 'align': [] }],                                // 정렬
           ['link', 'image'],
-          ['clean'] 
-        ], 
+          ['clean']
+        ],
       },
       // handlers: { image: imageHandler },
       ImageResize: {
@@ -71,30 +75,35 @@ const BoardInput = ({ page }) => {
 
   // DB에서 post 불러오기 : Read
   const showPost = async (id) => {
-    try{
+    try {
       const response = await fetch(url + '/' + id);
       const data = await response.json();
       return data;
-    } catch(error){
+    } catch (error) {
       console.log(error.message);
     }
   }
 
   useEffect(() => {
-    if(page === 'update'){
+    if (page === 'update') {
       const fetchData = async () => {
         const result = await showPost(post_id);
+
         setCategory(result.category);
         setTitle(result.title);
         setContent(result.content);
+
+        setPostData(result)
       };
       fetchData();
+
+      // 사용자 정보 확인
     }
   }, [page, post_id]);
 
   // DB에 저장 : Create
   const createPost = async (formData) => {
-    
+
     try {
       const response = await axios.post(url, formData);
 
@@ -102,7 +111,7 @@ const BoardInput = ({ page }) => {
         alert('등록 완료');
         navigate('/board');
       }
-      
+
     } catch (error) {
       console.log(error.message);
     }
@@ -116,7 +125,7 @@ const BoardInput = ({ page }) => {
         alert('수정 완료');
         navigate('/board');
       }
-      
+
     } catch (error) {
       console.log(error.message);
     }
@@ -134,32 +143,32 @@ const BoardInput = ({ page }) => {
     }
 
     for (let key in formData) {
-        if (formData[key] === '' || (key === 'content' && formData[key][0]['insert'] === '\n')) return alert('입력창을 확인하세요');
-      }
-      
+      if (formData[key] === '' || (key === 'content' && formData[key][0]['insert'] === '\n')) return alert('입력창을 확인하세요');
+    }
+
     for (let key in formData) {
       if (formData[key] === '') return alert('입력창을 확인하세요');
     }
 
-    if(page === 'create'){
+    if (page === 'create') {
       let addData = {
-        user_id : user.id,
+        user_id: user.id,
         nickname: user.nickname,
-        views : 0,
-        created_at : date + ' ' + time,
+        views: 0,
+        created_at: date + ' ' + time,
       }
       formData = { ...formData, ...addData };
       createPost(formData);
 
-    } else if(page === 'update') {
+    } else if (page === 'update') {
       updatePost(formData);
     }
-  }  
+  }
 
   const cancelEv = () => {
-    if(page === 'create'){
+    if (page === 'create') {
       navigate('/board');
-    } else if(page === 'update'){
+    } else if (page === 'update') {
       navigate('/board/' + post_id);
     }
   }
@@ -179,7 +188,7 @@ const BoardInput = ({ page }) => {
               <option value="사가">사가</option>
             </Form.Select>
           </Form.Group>
-        
+
           <Form.Group className="mb-3" >
             <Form.Label htmlFor='title'>제목</Form.Label>
             <Form.Control type='text' name="title" id='title' placeholder="제목을 입력하세요" value={title} onChange={event => setTitle(event.target.value)} />
@@ -202,8 +211,8 @@ const BoardInput = ({ page }) => {
         </Form>
 
         <div className='d-md-flex justify-content-end'>
-          <Button variant="outline-warning" onClick={ cancelEv }>취소</Button>
-          <Button className='ms-3' variant="outline-secondary" onClick={ checkForm } >저장하기</Button>
+          <Button variant="outline-warning" onClick={cancelEv}>취소</Button>
+          <Button className='ms-3' variant="outline-secondary" onClick={checkForm} >저장하기</Button>
         </div>
 
       </div>

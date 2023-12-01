@@ -104,12 +104,9 @@ const PostPage = () => {
     }
   }
 
-  console.log(postData);
-
   // CommentList에서 Comments 받기
   const getCommentList = (data) => {
     if (data) {
-      console.log(data);
       setComments(data);
     }
   }
@@ -136,7 +133,7 @@ const PostPage = () => {
             <Row>
               <Col xs={9}>
                 <div className='d-flex flex-column'>
-                  <Row className='d-flex mb-4'>
+                  <Row className='d-flex mb-4' style={{ paddingLeft: '15px' }}>
                     <Col xs={9} >
                       <div className='fs-3 fw-bolder'><span>{postData.title}</span></div>
                       <div className='fs-6 fw-lighter text-body-secondary'><span>{postData.category}</span></div>
