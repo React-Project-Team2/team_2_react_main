@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Button, Card, Form, Dropdown } from 'react-bootstrap';
+import { Button, Form, Dropdown } from 'react-bootstrap';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import '../styles/Comment.css'
 import ConfirmModal from '../components/common/modals/ConfirmModal';
@@ -78,25 +78,26 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
     }, [editedComment]);
 
     return (
-        <Card className='rounded-0'>
-            <Card.Body>
-                {isEdit ? (
-                    <Form.Group className='comment-edit-container' onCommit={handleSave}>
-                        <Form.Control
-                            as='textarea'
-                            rows={editedComment.split('\n').length || 1}
-                            ref={textareaRef}
-                            value={editedComment}
-                            onChange={e => { setEditedComment(e.target.value); }}
-                            onKeyDown={handleKeyDown} />
-                        <Button variant='success' onClick={handleSave}>저장</Button>
-                        <Button variant='secondary' onClick={handleCancel}>취소</Button>
-                    </Form.Group>
-                ) : (
-                    <div className='comment-container'>
-                        <Card.Title>{comment.userId}</Card.Title>
-                        <Card.Text>{comment.text}</Card.Text>
-                        <Card.Text>{comment.created_at}</Card.Text>
+        <div className='rounded-0'>
+            {isEdit ? (
+                <Form.Group className='comment-edit-container' onCommit={handleSave}>
+                    <Form.Control
+                        as='textarea'
+                        rows={editedComment.split('\n').length || 1}
+                        ref={textareaRef}
+                        value={editedComment}
+                        onChange={e => { setEditedComment(e.target.value); }}
+                        onKeyDown={handleKeyDown} />
+                    <Button variant='success' onClick={handleSave}>저장</Button>
+                    <Button variant='secondary' onClick={handleCancel}>취소</Button>
+                </Form.Group>
+            ) : (
+                <div className='comment-container ps-2'>
+                    <p className='comment-nickname'>{comment.userId}</p>
+                    <p className='comment-created-at'>{comment.created_at}</p>
+                    <p className='comment-text'>{comment.text}</p>
+
+                    <div className='menu'>
                         {user === null || user.userId === comment.userId ? (
                             <Dropdown>
                                 <Dropdown.Toggle as={ThreeDotsVertical} variant='primary' id='dropdown-basic'>더보기</Dropdown.Toggle>
@@ -113,9 +114,10 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
                             show={showModal}
                         />
                     </div>
-                )}
-            </Card.Body>
-        </Card>
+
+                </div>
+            )}
+        </div>
     );
 };
 
