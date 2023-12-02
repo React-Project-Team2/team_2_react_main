@@ -22,10 +22,10 @@ const PostComponent = ({ category }) => {
   const fetchPosts = useCallback(async () => {
     try {
       const params = {
-          _page: currentPage,
-          _limit: pagesPerGroup,
-          _sort: 'created_at',
-          _order: 'desc',
+        _page: currentPage,
+        _limit: pagesPerGroup,
+        _sort: 'created_at',
+        _order: 'desc',
       };
 
       if (category !== '전체') {
@@ -75,7 +75,7 @@ const PostComponent = ({ category }) => {
         <Card key={post.id} className='border-0 mb-3'>
           <Card.Body onClick={() => goToDetailPage(post.id)} >
             <Row>
-              <Col className='post'>
+              <Col sm="7" md="8" className='post'>
                 <Card.Title className='post-title'>
                   {post.title}
                 </Card.Title>
@@ -83,18 +83,20 @@ const PostComponent = ({ category }) => {
                   {post.content.map(item => item.insert).join('\n').replace(/^\s+|\s+$/g, '')}
                 </Card.Text>
               </Col>
-              <Col>
-                {post.created_at}
+              <Col sm="3" md="2" className='d-flex align-items-center'>
+                <div className='post-create-at'>
+                  {post.created_at}
+                </div>
               </Col>
-              <Col>
-                <div className='d-flex justify-content-end mr-3 pt-3'>
+              <Col sm="2">
+                <div className='d-flex flex-column justify-content-center mr-3 pt-3'>
                   <div>
-                    <Eye className='w-3'/>
+                    <Eye className='w-3 me-2' />
                     {/* <img src='https://cdn.pixabay.com/photo/2016/12/18/11/04/eye-1915455_1280.png' width='27px' alt='조회수' /> */}
                     {post.views}
                   </div>
                   <div>
-                    <ChatRight className='me-2'/>
+                    <ChatRight className='me-2' />
                     {/* <img src='https://cdn.icon-icons.com/icons2/37/PNG/32/comments_3979.png' width='20px' alt='댓글' /> */}
                     {commentCounts[post.id]}
                   </div>
@@ -105,9 +107,9 @@ const PostComponent = ({ category }) => {
         </Card>
       ))}
       <div className="d-flex justify-content-center">
-        <PaginationComponent 
-          currentPage={currentPage} 
-          totalPages={totalPages} 
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
           pagesPerGroup={pagesPerGroup}
           handlePageChange={handlePageChange}
         />
