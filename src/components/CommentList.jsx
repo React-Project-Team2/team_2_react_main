@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
+import PaginationComponent from './PaginationComponent';
 import axios from 'axios';
-import { ListGroup, Pagination } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
 
 const CommentList = ({ postId, onData, user }) => {
   const [comments, setComments] = useState([]);
@@ -16,11 +17,11 @@ const CommentList = ({ postId, onData, user }) => {
   let hours = today.getHours();
   let minutes = today.getMinutes();
   let seconds = today.getSeconds();
-  
+
   month = month < 10 ? '0' + month : month;
   day = day < 10 ? '0' + day : day;
-  hours = hours < 10 ? '0' + hours : hours;   
-  minutes = minutes < 10 ? '0' + minutes : minutes; 
+  hours = hours < 10 ? '0' + hours : hours;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
   seconds = seconds < 10 ? '0' + seconds : seconds;
 
   let date = today.getFullYear() + '-' + month + "-" + day;
@@ -42,26 +43,17 @@ const CommentList = ({ postId, onData, user }) => {
     }
   };
 
-  const totalPages = Math.ceil(comments.length / commentsPerPage);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   useEffect(() => {
     fetchComments();
   }, [postId]);
 
-  let items = [];
-  for (let number = 1; number <= totalPages; number++) {
-    items.push(
-      <Pagination.Item key={number} active={number === currentPage} onClick={() => handlePageChange(number)}>
-        {number}
-      </Pagination.Item>,
-    );
-  }
-
-  console.log(user)
+  const totalPages = Math.ceil(comments.length / commentsPerPage);
 
   return (
     <>
@@ -76,7 +68,12 @@ const CommentList = ({ postId, onData, user }) => {
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <Pagination className="justify-content-center mt-2">{items}</Pagination>
+      <PaginationComponent
+        currentPage={currentPage}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
+        pagesPerGroup={5}
+      />
     </>
   );
 }
