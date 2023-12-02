@@ -3,7 +3,6 @@ import { Pagination } from 'react-bootstrap';
 
 const PaginationComponent = ({ currentPage, totalPages, pagesPerGroup, handlePageChange }) => {
   const currentGroup = Math.ceil(currentPage / pagesPerGroup);
-  console.log('totalPages'+totalPages, pagesPerGroup)
 
   let pages = [];
 

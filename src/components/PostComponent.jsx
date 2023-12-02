@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
 import { Eye, ChatRight } from 'react-bootstrap-icons';
 import axios from 'axios';
-import PaginationComponent from './PaginationComponent';  
+import PaginationComponent from './PaginationComponent';
+import '../styles/PostComponent.css'
 
 const PostComponent = ({ category }) => {
   const [posts, setPosts] = useState([]);
@@ -22,7 +23,9 @@ const PostComponent = ({ category }) => {
     try {
       const params = {
           _page: currentPage,
-          _limit: pagesPerGroup
+          _limit: pagesPerGroup,
+          _sort: 'created_at',
+          _order: 'desc',
       };
 
       if (category !== '전체') {
@@ -43,13 +46,6 @@ const PostComponent = ({ category }) => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-  };
-
-  const truncateText = (text, maxLength) => {
-    if (text.length > maxLength) {
-      return text.substring(0, maxLength) + '...';
-    }
-    return text;
   };
 
   useEffect(() => {
@@ -77,15 +73,18 @@ const PostComponent = ({ category }) => {
     <Container>
       {posts.map((post) => (
         <Card key={post.id} className='border-0 mb-3'>
-          <Card.Body>
+          <Card.Body onClick={() => goToDetailPage(post.id)} >
             <Row>
-              <Col>
-                <Card.Title onClick={() => goToDetailPage(post.id)} style={{cursor: "pointer"}}>
+              <Col className='post'>
+                <Card.Title className='post-title'>
                   {post.title}
                 </Card.Title>
-                <Card.Text>
-                  {truncateText(post.content.map(item => item.insert).join(' '), 123)}
+                <Card.Text className='post-content'>
+                  {post.content.map(item => item.insert).join('\n').replace(/^\s+|\s+$/g, '')}
                 </Card.Text>
+              </Col>
+              <Col>
+                {post.created_at}
               </Col>
               <Col>
                 <div className='d-flex justify-content-end mr-3 pt-3'>
