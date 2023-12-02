@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../styles/BoardPage.css';
 import ContainerNavbar from '../components/common/containNavbar/ContainerNav.jsx';
 import PostComponent from '../components/PostComponent.jsx';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const BoardPage = () => {
   const navigate = useNavigate();
+  const [category, setCategory] = useState('전체');
 
   const handleButtonClicked = () => {
     navigate('/board/create');
   };
+
+  const handleSelectCategory = (selectedKey) => {
+    setCategory(selectedKey);
+  }
 
   return (
     <>
@@ -28,7 +33,19 @@ const BoardPage = () => {
             <Container className='my-3 ms-4'>
               <Row>
                 <Col xs={2} className='border-end text-center'>
-                  <h4>지역</h4>
+                  <Dropdown onSelect={handleSelectCategory}>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                      {category}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item eventKey="전체">전체</Dropdown.Item>
+                      <Dropdown.Item eventKey="후쿠오카">후쿠오카</Dropdown.Item>
+                      <Dropdown.Item eventKey="나가사키">나가사키</Dropdown.Item>
+                      <Dropdown.Item eventKey="구마모토">구마모토</Dropdown.Item>
+                      <Dropdown.Item eventKey="오이타">오이타</Dropdown.Item>
+                      <Dropdown.Item eventKey="사가">사가</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </Col>
                 <Col xs={7}>
                 </Col>
@@ -37,7 +54,7 @@ const BoardPage = () => {
                 </Col>
               </Row>
             </Container>
-            <PostComponent />
+            <PostComponent category={category} />
           </Container>
         </div>
       </div>

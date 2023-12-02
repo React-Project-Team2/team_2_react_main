@@ -1,13 +1,13 @@
 import React from 'react';
 import { Pagination } from 'react-bootstrap';
 
-const PaginationComponent = ({ currentPage, totalPages, handlePageChange, pagesPerGroup }) => {
-  const totalGroups = Math.ceil(totalPages / pagesPerGroup);
+const PaginationComponent = ({ currentPage, totalPages, pagesPerGroup, handlePageChange }) => {
   const currentGroup = Math.ceil(currentPage / pagesPerGroup);
+  console.log('totalPages'+totalPages, pagesPerGroup)
 
   let pages = [];
 
-  if (totalGroups > 1) {
+  if (totalPages > 1) {
     pages.push(
       <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />,
       <Pagination.Prev onClick={() => handlePageChange(Math.max(1, currentPage - 1))} disabled={currentPage === 1} />

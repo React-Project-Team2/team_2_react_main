@@ -5,11 +5,12 @@ import { Eye, ChatRight } from 'react-bootstrap-icons';
 import axios from 'axios';
 import PaginationComponent from './PaginationComponent';  
 
-const PostComponent = () => {
+const PostComponent = ({ category }) => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [commentCounts, setCommentCounts] = useState({});
+  const pagesPerGroup = 10;
 
   const navigate = useNavigate();
 
@@ -19,18 +20,22 @@ const PostComponent = () => {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:3300/posts`, {
-        params: {
+      const params = {
           _page: currentPage,
-          _limit: 10
-        }
-      });
+          _limit: pagesPerGroup
+      };
+
+      if (category !== '전체') {
+        params.category = category;
+      }
+
+      const response = await axios.get(`http://localhost:3300/posts`, { params });
       setPosts(response.data);
-      setTotalPages(Math.ceil(response.headers['x-total-count'] / 10));
+      setTotalPages(Math.ceil(response.headers['x-total-count'] / pagesPerGroup));
     } catch (error) {
       console.error(error);
     }
-  }, [currentPage]);
+  }, [currentPage, category]);
 
   useEffect(() => {
     fetchPosts();
@@ -104,6 +109,7 @@ const PostComponent = () => {
         <PaginationComponent 
           currentPage={currentPage} 
           totalPages={totalPages} 
+          pagesPerGroup={pagesPerGroup}
           handlePageChange={handlePageChange}
         />
       </div>
