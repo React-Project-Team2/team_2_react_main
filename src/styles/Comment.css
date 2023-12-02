@@ -1,8 +1,28 @@
 .comment-container {
-  display: flex;
-  justify-content: space-between;
+  position: relative;
+  /* display: flex; */
+  /* justify-content: space-between; */
   align-items: center;
   white-space: pre-wrap; /* 엔터키 줄바꿈 유지 */
+}
+
+.comment-nickname {
+  margin-bottom: 0%;
+  font-size: smaller;
+}
+
+.comment-created-at {
+  font-size: x-small;
+}
+
+.comment-text {
+  font-size: small;
+}
+
+.menu {
+  position: absolute;
+  top: 0;
+  right: 0px;
 }
 
 .comment-container .button-group button {

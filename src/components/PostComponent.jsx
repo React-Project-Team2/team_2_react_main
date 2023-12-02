@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col } from 'react-bootstrap';
+import { Eye, ChatRight } from 'react-bootstrap-icons';
 import axios from 'axios';
-import BoardPagination from './BoardPagination.jsx';
+import PaginationComponent from './PaginationComponent';  
 
 const PostComponent = () => {
   const [posts, setPosts] = useState([]);
@@ -84,11 +85,13 @@ const PostComponent = () => {
               <Col>
                 <div className='d-flex justify-content-end mr-3 pt-3'>
                   <div>
-                    <img src='https://cdn.pixabay.com/photo/2016/12/18/11/04/eye-1915455_1280.png' width='27px' alt='조회수' />
-                    {/* {post.views} */}
+                    <Eye className='w-3'/>
+                    {/* <img src='https://cdn.pixabay.com/photo/2016/12/18/11/04/eye-1915455_1280.png' width='27px' alt='조회수' /> */}
+                    {post.views}
                   </div>
                   <div>
-                    <img src='https://cdn.icon-icons.com/icons2/37/PNG/32/comments_3979.png' width='20px' alt='댓글' />
+                    <ChatRight className='me-2'/>
+                    {/* <img src='https://cdn.icon-icons.com/icons2/37/PNG/32/comments_3979.png' width='20px' alt='댓글' /> */}
                     {commentCounts[post.id]}
                   </div>
                 </div>
@@ -98,7 +101,11 @@ const PostComponent = () => {
         </Card>
       ))}
       <div className="d-flex justify-content-center">
-        <BoardPagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        <PaginationComponent 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          handlePageChange={handlePageChange}
+        />
       </div>
     </Container>
   );
