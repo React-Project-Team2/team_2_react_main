@@ -98,7 +98,7 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
                     <p className='comment-created-at'>{comment.created_at}</p>
                     <p className='comment-text'>{comment.text}</p>
 
-                    <div className='menu'>
+                    <div className='comment-menu'>
                         {user === null || user.userId === comment.userId ? (
                             <Dropdown>
                                 <Dropdown.Toggle as={ThreeDotsVertical} variant='primary' id='dropdown-basic'>더보기</Dropdown.Toggle>
