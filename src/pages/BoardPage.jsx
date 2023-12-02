@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import '../styles/BoardPage.css';
-import ContainerNavbar from '../components/common/containNavbar/ContainerNav.jsx';
 import PostComponent from '../components/PostComponent.jsx';
 import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -19,22 +18,21 @@ const BoardPage = () => {
 
   return (
     <>
-      <div className='container-fluid board'>
-        <div className='w-auto'>
-          <div className="pb-5 pt-5 container text-center">
-            <h1>현지 학기제</h1>
-            <h3>sub name</h3>
+      <div className='container-fluid pb-5 board'>
+        <div className="pb-5 pt-5 container text-center">
+          <h1>현지 학기제</h1>
+          <h3>sub name</h3>
+        </div>
+        <Container className="bg-white p-0 rounded white-board">
+          <div className='img-box'>
+            <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="img-ht img-fluid rounded-top" alt='후쿠오카 이미지(야경)' />
           </div>
-          <Container className="bg-white p-0 white-board">
-            <ContainerNavbar />
-            <div className='img-box'>
-              <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="img-ht img-fluid rounded" alt='' />
-            </div>
-            <Container className='my-3 ms-4'>
+          <Container>
+            <Container className='my-3'>
               <Row>
-                <Col xs={2} className='border-end text-center'>
+                <Col sm={2} md={2} className='py-1'>
                   <Dropdown onSelect={handleSelectCategory}>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    <Dropdown.Toggle variant="success">
                       {category}
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
@@ -47,16 +45,18 @@ const BoardPage = () => {
                     </Dropdown.Menu>
                   </Dropdown>
                 </Col>
-                <Col xs={7}>
+                <Col sm={7} md={8}>
                 </Col>
-                <Col xs={3}>
-                  <Button variant="secondary" onClick={handleButtonClicked}>게시글 작성</Button>
+                <Col sm={3} md={2} className='py-1'>
+                  <Button variant="secondary" onClick={handleButtonClicked}>글쓰기</Button>
                 </Col>
               </Row>
             </Container>
-            <PostComponent category={category} />
+            <div className='border-top'>
+              <PostComponent category={category} />
+            </div>
           </Container>
-        </div>
+        </Container>
       </div>
     </>
   )

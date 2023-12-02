@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Card, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { Eye, ChatRight } from 'react-bootstrap-icons';
 import axios from 'axios';
 import PaginationComponent from './PaginationComponent';
@@ -72,23 +72,23 @@ const PostComponent = ({ category }) => {
   return (
     <Container>
       {posts.map((post) => (
-        <Card key={post.id} className='border-0 mb-3'>
-          <Card.Body onClick={() => goToDetailPage(post.id)} >
+        <div className='border-0 mb-3'>
+          <div onClick={() => goToDetailPage(post.id)} >
             <Row>
-              <Col sm="7" md="8" className='post'>
-                <Card.Title className='post-title'>
+              <Col sm={6} md={8} className='post'>
+                <div className='post-title h5'>
                   {post.title}
-                </Card.Title>
-                <Card.Text className='post-content'>
+                </div>
+                <div className='post-content'>
                   {post.content.map(item => item.insert).join('\n').replace(/^\s+|\s+$/g, '')}
-                </Card.Text>
+                </div>
               </Col>
-              <Col sm="3" md="2" className='d-flex align-items-center'>
+              <Col sm={3} md={2} className='d-flex align-items-center'>
                 <div className='post-create-at'>
                   {post.created_at}
                 </div>
               </Col>
-              <Col sm="2">
+              <Col sm={3} md={2}>
                 <div className='d-flex flex-column justify-content-center mr-3 pt-3'>
                   <div>
                     <Eye className='w-3 me-2' />
@@ -103,8 +103,8 @@ const PostComponent = ({ category }) => {
                 </div>
               </Col>
             </Row>
-          </Card.Body>
-        </Card>
+          </div>
+        </div>
       ))}
       <div className="d-flex justify-content-center">
         <PaginationComponent
