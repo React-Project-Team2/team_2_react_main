@@ -135,7 +135,7 @@ const PostPage = () => {
                 <div className='d-flex flex-column'>
                   <Row className='d-flex mb-4' style={{ paddingLeft: '15px' }}>
                     <Col xs={9} >
-                      <div className='fs-3 fw-bolder'><span>{postData.title}</span></div>
+                      <div className='fs-1 fw-bolder text-truncate'><span>{postData.title}</span></div>
                       <div className='fs-6 fw-lighter text-body-secondary'><span>{postData.category}</span></div>
                     </Col>
                     <Col xs={3} className='d-flex flex-column justify-content-end' >
@@ -156,10 +156,10 @@ const PostPage = () => {
                 </div>
               </Col>
               {/* 사이드 */}
-              <Col xs={3}>
-                <div className='mb-3'>
-                  <div><Eye className='me-2' /><span>{postData.views} views</span></div>
-                  <div><ChatRight className='me-2' /><span>{comments.length} comments</span></div>
+              <Col xs={3} className='px-4'>
+                <div className='mb-4'>
+                  <div className='mb-3'><Eye className='me-2' /><span>{postData.views} views</span></div>
+                  <div className='mb-3'><ChatRight className='me-2' /><span>{comments.length} comments</span></div>
                 </div>
                 <div className='d-md-flex flex-column'>
                   <Button className='mb-2' variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>

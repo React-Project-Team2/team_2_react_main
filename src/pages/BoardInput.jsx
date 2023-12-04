@@ -1,4 +1,4 @@
-import { React, useState, useRef, useMemo, useEffect } from 'react';
+import { React, useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap'
 import ReactQuill, { Quill } from 'react-quill';
@@ -6,6 +6,7 @@ import ImageResize from 'quill-image-resize';
 import 'react-quill/dist/quill.snow.css';
 
 import axios from 'axios';
+import AWS from 'aws-sdk';
 import '../styles/BoardInput.css'
 
 // 이미지 크기조절
@@ -34,16 +35,42 @@ const BoardInput = ({ page }) => {
   const date = `${today.getFullYear()}-${month}-${day}`;
   const time = `${hours}:${minutes}:${seconds}`;
 
-  const checkUser = () => {
-    if (user === null) {
-      alert('로그인 후 이용가능 합니다.')
-      navigate('/signIn');
+  const fileList = [];
+
+
+  const uploadToS3 = async (formData) => {
+    const s3 = new AWS.S3({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION
+    });
+
+    const params = {
+
     }
   }
 
-  checkUser();
-
   //  추후에 이미지를 AWS S3에 저장할 수 있도록 만들기
+  const imageHandler = () => {
+    const input = document.createElement('input');
+
+    input.setAttribute('type', 'text');
+    input.click();
+
+    input.onChange = async () => {
+      const file = input.files[0];
+      const formData = new FormData();
+
+      formData.append('image', file);
+      fileList.push(file);
+
+      const response = await uploadToS3(formData);
+
+      const range = this.quill.getSelection(true);
+      this.quill.insertEmbed(range.index, 'image', response.data.imageUrl);
+    };
+  }
+
   // quill 툴바
   const modules = useMemo(() => {
     return {
@@ -84,10 +111,19 @@ const BoardInput = ({ page }) => {
     }
   }
 
+  const checkUser = useCallback((value) => {
+    if (user.id !== value) {
+      alert('권한이 없습니다.');
+      navigate('/board');
+    }
+  }, [user.id, navigate]);
+
   useEffect(() => {
     if (page === 'update') {
       const fetchData = async () => {
         const result = await showPost(post_id);
+
+        checkUser(result.user_id)
 
         setCategory(result.category);
         setTitle(result.title);
@@ -96,10 +132,10 @@ const BoardInput = ({ page }) => {
         setPostData(result)
       };
       fetchData();
-
+      console.log('1')
       // 사용자 정보 확인
     }
-  }, [page, post_id]);
+  }, [page, post_id, checkUser]);
 
   // DB에 저장 : Create
   const createPost = async (formData) => {
@@ -175,7 +211,7 @@ const BoardInput = ({ page }) => {
 
   return (
     <>
-      <div className='container-md py-3' id='board-insert-div'>
+      <div className='container-md py-5' id='board-insert-div'>
         <Form className='input-form' >
           <Form.Group className='mb-3'>
             <Form.Label>카테고리</Form.Label>
