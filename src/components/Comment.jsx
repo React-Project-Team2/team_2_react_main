@@ -93,12 +93,12 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
                     <Button variant='secondary' onClick={handleCancel}>취소</Button>
                 </Form.Group>
             ) : (
-                <div className='comment-container ps-2'>
+                <div className='comment-container ps-2 pt-2'>
                     <p className='comment-nickname'>{comment.userNickname}</p>
                     <p className='comment-created-at'>{comment.created_at}</p>
-                    <p className='comment-text'>{comment.text}</p>
+                    <p className='comment-text pe-3'>{comment.text}</p>
 
-                    <div className='comment-menu'>
+                    <div className='comment-menu pe-1'>
                         {user === null || user.userId === comment.userId ? (
                             <Dropdown>
                                 <Dropdown.Toggle as={ThreeDotsVertical} variant='primary' id='dropdown-basic'>더보기</Dropdown.Toggle>

@@ -60,7 +60,7 @@ const CommentList = ({ postId, onData, user }) => {
       <CommentForm postId={postId} user={user} created_at={created_at} onCommentSubmit={fetchComments} />
       <ListGroup className='mt-3'>
         <ListGroup.Item className='p-2 text-muted'>
-          {comments.length > 0 ? `댓글: ${comments.length}` : '댓글이 없습니다.'}
+          {comments.length > 0 ? `Comments` : '댓글이 없습니다.'}
         </ListGroup.Item>
         {comments.slice((currentPage - 1) * commentsPerPage, currentPage * commentsPerPage).map((comment) => (
           <ListGroup.Item key={comment.id} className='p-0 list-item'>
