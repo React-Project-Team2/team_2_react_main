@@ -1,0 +1,25 @@
+.post-box .title, .post-box .content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+}
+.post-box .title{
+    -webkit-line-clamp: 1;
+    font-weight: bold;
+}
+
+.post-box .content {
+    height: 168px;
+    -webkit-line-clamp: 7;
+}
+
+.link-style {
+    text-decoration: none;
+    color: inherit;
+}
+
+.views {
+    white-space: nowrap;
+}
