@@ -1,20 +1,21 @@
 import React from 'react';
 import { Pagination } from 'react-bootstrap';
 
-const PaginationComponent = ({ currentPage, totalPages, handlePageChange, pagesPerGroup }) => {
-  const totalGroups = Math.ceil(totalPages / pagesPerGroup);
+const PaginationComponent = ({ currentPage, totalPages, pagesPerGroup, handlePageChange }) => {
   const currentGroup = Math.ceil(currentPage / pagesPerGroup);
 
   let pages = [];
 
-  if (totalGroups > 1) {
-    pages.push(
-      <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />,
-      <Pagination.Prev onClick={() => handlePageChange(Math.max(1, currentPage - 1))} disabled={currentPage === 1} />
-    );
-
+  if (totalPages > 1) {
     let startPage = (currentGroup - 1) * pagesPerGroup + 1;
     let endPage = Math.min(currentGroup * pagesPerGroup, totalPages);
+
+    if (totalPages > pagesPerGroup) {
+      pages.push(
+        <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />,
+        <Pagination.Prev onClick={() => handlePageChange(Math.max(1, currentPage - 1))} disabled={currentPage === 1} />
+      );
+    }
 
     for (let number = startPage; number <= endPage; number++) {
       pages.push(
@@ -23,11 +24,13 @@ const PaginationComponent = ({ currentPage, totalPages, handlePageChange, pagesP
         </Pagination.Item>,
       );
     }
-
-    pages.push(
-      <Pagination.Next onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages} />,
-      <Pagination.Last onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages} />
-    );
+    
+    if (totalPages > pagesPerGroup) {
+      pages.push(
+        <Pagination.Next onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages} />,
+        <Pagination.Last onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages} />
+      );
+    }
   }
 
   return (
