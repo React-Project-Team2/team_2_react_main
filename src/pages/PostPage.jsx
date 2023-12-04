@@ -14,6 +14,7 @@ import ConfirmModal from '../components/common/modals/ConfirmModal';
 const PostPage = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
+
   const url = 'http://localhost:3300/';
 
   const { post_id } = useParams();
@@ -164,7 +165,7 @@ const PostPage = () => {
                 <div className='d-md-flex flex-column'>
                   <Button className='mb-2' variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
                   {
-                    (user === null || user.id === postData.user_id) ? <>
+                    (user !== null && user.id === postData.user_id) ? <>
                       <Button className='mb-2' variant="outline-secondary" onClick={() => navigate('/board/update/' + post_id)} >수정하기</Button>
                       <Button variant="outline-danger" onClick={() => setShowModal(true)}  >삭제하기</Button>
                     </> : ''
