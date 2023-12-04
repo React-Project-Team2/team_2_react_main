@@ -10,7 +10,7 @@ import axios from 'axios';
 import uuid from 'react-uuid';
 import '../styles/BoardInput.css'
 
-import { getImageUrl, deleteImages } from '../components/common/logics/awsServices';
+import { getImageUrl, deleteImages, configureAWS, extractionValue } from '../components/common/aws/awsServices';
 
 // 이미지 크기조절
 Quill.register('modules/ImageResize', ImageResize);
@@ -38,6 +38,10 @@ const BoardInput = ({ page }) => {
   const date = `${today.getFullYear()}-${month}-${day}`;
   const time = `${hours}:${minutes}:${seconds}`;
 
+  useEffect(() => {
+    configureAWS();
+  }, []);
+
   const imageHandler = useCallback( () => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -50,81 +54,19 @@ const BoardInput = ({ page }) => {
       formData.append('image', file);
 
       const keyName = user.nickname + '_uNick_' + uuid() + '_iName_' + formData.get('image').name;
-      // try {
-      //   AWS.config.update({
-      //     accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
-      //     secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
-      //     region: 'ap-northeast-2',
-      //   });
 
-      //     const myBucket = new AWS.S3({
-      //       params: { Bucket: 'my-react-team-project', },
-      //       region: 'ap-northeast-2',
-      //     });
-
-      //   const keyName = user.nickname + '_uNick_' + uuid() + '_iName_' + formData.get('image').name;
-        
-      //   const params = {
-      //       Bucket: 'my-react-team-project',
-      //       ContentType: 'images/jpeg',
-      //       Key: 'images/' + keyName,
-      //       Body: formData.get('image'),
-      //       ACL: 'public-read'
-      //     };
-        
-      //   const imageURL = await myBucket.upload(params).promise().then((response) => response.Location);
-        const imageURL = getImageUrl(formData, keyName);
+      try {
+        const imageURL = await getImageUrl(formData, keyName);
         const editor = quillRef.current.editor;
         const range = editor.getSelection();
         editor.insertEmbed(range.index, 'image', imageURL);
+      } catch (error) {
+        console.log(error.message);
+      }
 
-        setFileList(prevFileList => [...prevFileList, keyName]);
-
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      
+      setFileList(prevFileList => [...prevFileList, keyName]);
     };
   }, [user.nickname]);
-
-  // const deleteImages = async (myImages, confirm) => {
-  //   let deleteList = (confirm !== 'delete' ? fileList.filter((item) => { return !myImages.has(item) }) : fileList);
-
-  //   if (deleteList.length !== 0) {
-  //     try {
-  //       AWS.config.update({
-  //         accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
-  //         secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
-  //         region: 'ap-northeast-2',
-  //       });
-
-  //       const myBucket = new AWS.S3({
-  //         params: { Bucket: 'my-react-team-project', },
-  //         region: 'ap-northeast-2',
-  //       });
-
-  //       const params = {
-  //         Bucket: 'my-react-team-project',
-  //         Delete: {
-  //           Objects: deleteList.map((item) => ({ Key: 'images/' + item }))
-  //         },
-  //       };
-
-  //       await myBucket.deleteObjects(params, (err, data) => {
-  //         if (err) {
-  //           console.log(err);
-  //         } else {
-  //           console.log("삭제성공 : ", data);
-  //         }
-  //       });
-
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   } else {
-  //     console.log("deleteList가 없음");
-  //   } 
-  // }
 
   // quill 툴바
   const modules = useMemo(() => {
@@ -244,7 +186,7 @@ const BoardInput = ({ page }) => {
       if (formData[key] === '' || (key === 'content' && (formData[key].length === 1  && formData[key][0]['insert'] === '\n'))) return alert('입력창을 확인하세요');
     }
 
-    let myImgList = extractionValue(quillContent);
+    let myImgList = extractionValue(quillContent, user.nickname);
 
     if (myImgList.length !== fileList.length) {
       deleteImages(fileList, new Set(myImgList), 'others');
@@ -270,22 +212,10 @@ const BoardInput = ({ page }) => {
       deleteImages(fileList, new Set(), 'delete');
       navigate('/board');
     } else if (page === 'update') {
-      let imgList = extractionValue(postData.content);
+      let imgList = extractionValue(postData.content, user.nickname);
       deleteImages(fileList, new Set(imgList), 'others');
       navigate('/board/' + post_id);
     }
-  }
-
-  // 입력값에서 S3에 저장된 형식의 이미지이름만 추출
-  const extractionValue = (items) => {
-    let imgList = items.map((item) => {
-      if (item['insert'] && typeof item['insert'] === 'object' && item['insert'].hasOwnProperty('image')) {
-        return user.nickname + '_uNick_' + item['insert'].image.split('_uNick_')[1];
-      }
-      return null;
-    }).filter(Boolean); // falsy값 제거
-
-    return imgList;
   }
 
   return (

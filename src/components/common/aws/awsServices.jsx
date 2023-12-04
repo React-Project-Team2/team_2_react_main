@@ -8,13 +8,12 @@ export const configureAWS = () => {
   });
 };
 
-// 이미지 삭제
+// 이미지 삭제 (fileList, Set타입 리스트, delete or other)
 export const deleteImages = async (fileList, myImages, confirm) => {
   let deleteList = (confirm !== 'delete' ? fileList.filter((item) => { return !myImages.has(item) }) : fileList);
 
   if (deleteList.length !== 0) {
     try {
-      configureAWS();
 
       const myBucket = new AWS.S3({
         params: { Bucket: 'my-react-team-project', },
@@ -47,7 +46,6 @@ export const deleteImages = async (fileList, myImages, confirm) => {
 // 이미지 url 가져오기
 export const getImageUrl = async (formData, keyName) => {
   try {
-    configureAWS();
 
     const myBucket = new AWS.S3({
       params: { Bucket: 'my-react-team-project', },
@@ -64,11 +62,21 @@ export const getImageUrl = async (formData, keyName) => {
 
     const imageURL = await myBucket.upload(params).promise().then((response) => response.Location);
 
-    console.log(imageURL);
-
     return imageURL;
 
   } catch (error) {
     console.log(error);
   }
+}
+
+// content에서 S3에 저장된 형식의 이미지이름만 추출
+export const extractionValue = (items, nickname) => {
+  let imgList = items.map((item) => {
+    if (item['insert'] && typeof item['insert'] === 'object' && item['insert'].hasOwnProperty('image')) {
+      return nickname + '_uNick_' + item['insert'].image.split('_uNick_')[1];
+    }
+    return null;
+  }).filter(Boolean); // falsy값 제거
+
+  return imgList;
 }

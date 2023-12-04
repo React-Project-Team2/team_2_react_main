@@ -10,6 +10,7 @@ import ContainerNavbar from '../components/common/containNavbar/ContainerNav'
 import '../styles/PostPage.css';
 import CommentList from '../components/CommentList';
 import ConfirmModal from '../components/common/modals/ConfirmModal';
+import { configureAWS, deleteImages, extractionValue } from '../components/common/aws/awsServices';
 
 const PostPage = () => {
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ const PostPage = () => {
   const [postData, setPostData] = useState({});
   const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    configureAWS();
+  }, []);
 
   const modules = useMemo(() => {
     return {
@@ -95,6 +100,7 @@ const PostPage = () => {
     setShowModal(false);
     try {
       deleteComments(comments);
+      deleteImages(extractionValue(postData.content, user.nickname), new Set(), 'delete');
       const response = await axios.delete(url + 'posts/' + id);
       console.log(response);
       if (response.status === 200) {
