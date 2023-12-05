@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Button, Card, Form, Dropdown, Modal } from 'react-bootstrap';
+import { Button, Form, Dropdown } from 'react-bootstrap';
+import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import '../styles/Comment.css'
+import ConfirmModal from '../components/common/modals/ConfirmModal';
 
 const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
     const [isEdit, setIsEdit] = useState(false);
@@ -17,13 +19,19 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
         setShowModal(true);
     };
 
-    const handleConfirmDelete = async () => {
-        try {
-            await axios.delete(`http://localhost:3300/comments/${comment.id}`);
-            await onCommentChange();
+    const handleConfirmDelete = async (flag) => {
+        if (flag) {
+            // 사용자가 확인 버튼을 클릭했을 때 댓글 삭제 
+            try {
+                await axios.delete(`http://localhost:3300/comments/${comment.id}`);
+                await onCommentChange();
+                setShowModal(false);
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
+            // 사용자가 취소 버튼을 클릭했을 때 모달 닫기
             setShowModal(false);
-        } catch (error) {
-            console.error(error);
         }
     };
 
@@ -36,10 +44,11 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
         }
 
         try {
-            await axios.put(`http://localhost:3300/comments/${comment.id}`, { 
+            await axios.put(`http://localhost:3300/comments/${comment.id}`, {
                 postId,
                 text: editedComment,
                 userId: user.userId,
+                userNickname: user.userNickname,
                 created_at,
             });
             setIsEdit(false);
@@ -57,7 +66,7 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) { // 엔터키를 눌렀을 때 (Shift 키를 누르지 않았을 경우)
             e.preventDefault(); // 개행 방지
-            handleSave(e); 
+            handleSave(e);
         }
     };
 
@@ -70,49 +79,46 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
     }, [editedComment]);
 
     return (
-        <Card className='rounded-0'>
-            <Card.Body>
-                {isEdit ? (
-                    <Form.Group className='comment-edit-container' onCommit={handleSave}>
-                        <Form.Control
-                            as='textarea'
-                            rows={editedComment.split('\n').length || 1}
-                            ref={textareaRef}
-                            value={editedComment}
-                            onChange={e => {setEditedComment(e.target.value);}}
-                            onKeyDown={handleKeyDown} />
-                        <Button variant='success' onClick={handleSave}>저장</Button>
-                        <Button variant='secondary' onClick={handleCancel}>취소</Button>
-                    </Form.Group>
-                ) : (
-                    <div className='comment-container'>
-                        <Card.Title>{comment.userId}</Card.Title>
-                        <Card.Text>{comment.text}</Card.Text>
-                        <Card.Text>{comment.created_at  }</Card.Text>
-                        {user.userId === comment.userId ? (
+        <div className='rounded-0'>
+            {isEdit ? (
+                <Form.Group className='comment-edit-container' onCommit={handleSave}>
+                    <Form.Control
+                        as='textarea'
+                        rows={editedComment.split('\n').length || 1}
+                        ref={textareaRef}
+                        value={editedComment}
+                        onChange={e => { setEditedComment(e.target.value); }}
+                        onKeyDown={handleKeyDown} />
+                    <Button variant='success' onClick={handleSave}>저장</Button>
+                    <Button variant='secondary' onClick={handleCancel}>취소</Button>
+                </Form.Group>
+            ) : (
+                <div className='comment-container ps-2 pt-2'>
+                    <p className='comment-nickname'>{comment.userNickname}</p>
+                    <p className='comment-created-at'>{comment.created_at}</p>
+                    <p className='comment-text pe-3'>{comment.text}</p>
+
+                    <div className='comment-menu pe-1'>
+                        {user === null || user.userId === comment.userId ? (
                             <Dropdown>
-                            <Dropdown.Toggle variant='primary' id='dropdown-basic'>더보기</Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item onClick={handleEdit}>수정</Dropdown.Item>
-                                <Dropdown.Item onClick={handleDelete}>삭제</Dropdown.Item>
-                            </Dropdown.Menu>
+                                <Dropdown.Toggle as={ThreeDotsVertical} variant='primary' id='dropdown-basic'>더보기</Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={handleEdit}>수정</Dropdown.Item>
+                                    <Dropdown.Item onClick={handleDelete}>삭제</Dropdown.Item>
+                                </Dropdown.Menu>
                             </Dropdown>
                         ) : ''}
-                        
-                        <Modal show={showModal} onHide={() => setShowModal(false)}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>삭제 확인</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>정말로 삭제하시겠습니까?</Modal.Body>
-                            <Modal.Footer>
-                                <Button variant='secondary' onClick={() => setShowModal(false)}>취소</Button>
-                                <Button variant='danger' onClick={handleConfirmDelete}>삭제</Button>
-                            </Modal.Footer>
-                        </Modal>
+                        <ConfirmModal
+                            onFlag={handleConfirmDelete}
+                            title='삭제 확인'
+                            text='정말 삭제하시겠습니까?'
+                            show={showModal}
+                        />
                     </div>
-                )}
-            </Card.Body>
-        </Card>
+
+                </div>
+            )}
+        </div>
     );
 };
 

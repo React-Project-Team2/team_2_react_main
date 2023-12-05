@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
+import { PencilFill } from 'react-bootstrap-icons';
 import '../styles/CommentForm.css'
 
 const CommentForm = ({ postId, user, created_at, onCommentSubmit }) => {
-    let userId = 'abcd';
-    if (user !== null) userId = user.userId;
-
+    let userId = 'abcd'; // 사용자 아이디 기본값
+    let userNickname = 'abcd'; // 사용자 닉네임 기본값
+    if (user !== null) {
+        userId = user.userId;
+        userNickname = user.nickname;
+    }
     const [text, setText] = useState('');
     const textareaRef = useRef(null);
 
@@ -22,6 +26,7 @@ const CommentForm = ({ postId, user, created_at, onCommentSubmit }) => {
             await axios.post('http://localhost:3300/comments', {
                 postId,
                 userId,
+                userNickname,
                 text,
                 created_at, // 생성일자
             });
@@ -59,7 +64,7 @@ const CommentForm = ({ postId, user, created_at, onCommentSubmit }) => {
                 className='comment-form-input'
             />
             <Button type="submit" className='ms-3'>
-                댓글 작성
+                <PencilFill className='mb-1'/>
             </Button>
         </Form>
     )

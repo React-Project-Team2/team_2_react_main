@@ -1,0 +1,24 @@
+.post {
+  cursor: pointer;
+}
+
+.post-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.post-content {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  white-space: pre-line;
+  line-height: 24px;
+  height: 48px;
+}
+
+.post-create-at {
+  text-align: center;
+}
