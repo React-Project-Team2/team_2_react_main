@@ -94,9 +94,11 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
                 </Form.Group>
             ) : (
                 <div className='comment-container ps-2 pt-2'>
-                    <p className='comment-nickname'>{comment.userNickname}</p>
-                    <p className='comment-created-at'>{comment.created_at}</p>
-                    <p className='comment-text pe-3'>{comment.text}</p>
+                    <div className='comment-container-top mb-1'>
+                        <p className='comment-nickname me-2 mb-0'>{comment.userNickname}</p>
+                        <p className='comment-created-at mb-0'>{comment.created_at}</p>
+                    </div>
+                    <p className='comment-text mb-2 pe-3'>{comment.text}</p>
 
                     <div className='comment-menu pe-1'>
                         {user === null || user.userId === comment.userId ? (

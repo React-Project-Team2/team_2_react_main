@@ -61,7 +61,7 @@ const CommentList = ({ postId, onData, user }) => {
       <ListGroup className='mt-3'>
         {comments.length > 0 ? 
           <ListGroup.Item className='p-2 text-muted'>
-            `Comments`
+            Comments
           </ListGroup.Item> :
           <ListGroup.Item className='bg-light p-5 text-center text-muted fs-5'>
             첫 댓글을 작성해주세요!
