@@ -15,8 +15,16 @@ const AboutPageUpdate = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(apiUrl);
-        const data = response.data[0];
-
+  
+        // data가 존재하는지와 introduction이 정의되어 있는지 확인
+        if (!response.data || response.data.introduction === undefined) {
+          console.error('Invalid response data:', response.data);
+          return;
+        }
+  
+        const data = response.data;
+  
+        // 데이터의 구조에 맞게 상태 설정
         setIntroduction(data.introduction);
         setAdvantages([...data.advantages]);
         setImages([...data.images]);
@@ -24,9 +32,10 @@ const AboutPageUpdate = () => {
         console.error('Error fetching data:', error.message);
       }
     };
-
+  
     fetchData();
-  }, []); 
+  }, []);
+
 
   const handleIntroductionChange = (event) => {
     setIntroduction(event.target.value);
@@ -68,7 +77,7 @@ const AboutPageUpdate = () => {
       className="ml-2"
       onClick={onClick}
       size="sm"
-      style={{ marginBottom: '10px', marginRight: '5px' }}
+      style={{ marginBottom: '10px', marginRight: '5px'}}
     >
       삭제
     </Button>
@@ -126,7 +135,7 @@ const AboutPageUpdate = () => {
             variant="primary"
             size="sm"
             onClick={handleAddAdvantage}
-            style={{ marginBottom: '10px', marginRight: '10px' }}
+            style={{ marginBottom: '10px', marginRight: '10px', width: '95px' }}
           >
             장점 추가
           </Button>
@@ -157,7 +166,7 @@ const AboutPageUpdate = () => {
             variant="primary"
             size="sm"
             onClick={handleAddImage}
-            style={{ marginBottom: '10px', marginRight: '10px' }}
+            style={{ marginBottom: '10px', marginRight: '10px', width: '95px' }}
           >
             이미지 추가
           </Button>

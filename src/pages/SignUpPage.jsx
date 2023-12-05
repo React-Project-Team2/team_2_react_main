@@ -27,14 +27,14 @@ const SignUpPage = () => {
     };
   
     try {
-      const usersResponse = await axios.get('http://localhost:3100/user');
+      const usersResponse = await axios.get('http://localhost:3300/user');
       const users = usersResponse.data;
 
       if (users.find((user) => user.userId === formData.userId)) {
         alert('이미 존재하는 아이디입니다.');
         return;
       }
-      const response = await axios.post('http://localhost:3100/user', formData);
+      const response = await axios.post('http://localhost:3300/user', formData);
       
       if (response.status === 201) {
         alert(`${formData.userId}님, 회원가입 축하합니다. 다시 로그인해주세요.`);
@@ -47,12 +47,10 @@ const SignUpPage = () => {
 
   return (
     <Container fluid className='p-0'>
-      <div className="p-5 bg-image register-image"></div>
-
+      <div className="p-5 bg-image register-image" />
       <div className='d-flex justify-content-center'>
-        <Card className='mx-5 mb-5 p-5 shadow-5 w-50 register-container'>
+        <Card className='mx-5 mb-5 p-5 shadow-5 register-container'>
           <Card.Body className='p-5 text-center'>
-
             <h2 className="fw-bold mb-5">지금 회원가입 하세요!</h2>
             <Form onSubmit={handleSubmit}>
               <Row>
@@ -104,18 +102,12 @@ const SignUpPage = () => {
                 <Form.Control.Feedback type="invalid">비밀번호가 일치하지 않습니다.</Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group className='d-flex justify-content-center mb-4'>
-                <Form.Check type="checkbox" label="정보 수집에 동의합니다." />
-              </Form.Group>
-
               <Button className='w-100 mb-4' variant='primary' type='submit'>회원가입</Button>
             </Form>
 
           </Card.Body>
         </Card>
       </div>
-      
-
     </Container>
   )
 }
