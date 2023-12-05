@@ -18,13 +18,13 @@ const Router = () => {
       <Route path="/board" element={<BoardPage />} />
       <Route path="/signUp" element={<SignUpPage />} />
       <Route path="/signIn" element={<SignInPage />} />
-      <Route path="/board/:post_id" element={<PostPage />} />
-      <Route path="/board/create" element={
+      <Route path="/board/:category_name/:post_id" element={<PostPage />} />
+      <Route path="/board/:category_name/create" element={
         <AuthRouter>
           <BoardInput page='create' />
         </AuthRouter>
       } />
-      <Route path="/board/update/:post_id" element={
+      <Route path="/board/:category_name/update/:post_id" element={
         <AuthRouter>
           <BoardInput page='update' />
         </AuthRouter>

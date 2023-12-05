@@ -1,19 +1,20 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../../contexts/AuthContext';
 
 const AuthRouter = ({ children }) => {
   const navigate = useNavigate();
-  const { state } = useContext(AuthContext);
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  console.log(user);
 
   useEffect(() => {
-    if (!state.isLogged) {
+    if (!user) {
       alert('로그인 후 이용해 주세요');
       navigate('/signIn');
     }
-  }, [state, navigate]);
+  }, [user, navigate]);
 
-  return state.isLogged ? children : null;
+  return user ? children : null;
 }
 
 export default AuthRouter;

@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import uuid from 'react-uuid';
 
 export const configureAWS = () => {
   AWS.config.update({
@@ -8,8 +9,8 @@ export const configureAWS = () => {
   });
 };
 
-// 이미지 삭제 (fileList, Set타입 리스트, delete or other)
-export const deleteImages = async (fileList, myImages, confirm) => {
+// 이미지 삭제 (fileList, Set타입 리스트, delete or other, 디렉토리 이름)
+export const deleteImages = async (fileList, myImages, confirm, dirName) => {
   let deleteList = (confirm !== 'delete' ? fileList.filter((item) => { return !myImages.has(item) }) : fileList);
 
   if (deleteList.length !== 0) {
@@ -23,7 +24,7 @@ export const deleteImages = async (fileList, myImages, confirm) => {
       const params = {
         Bucket: 'my-react-team-project',
         Delete: {
-          Objects: deleteList.map((item) => ({ Key: 'images/' + item }))
+          Objects: deleteList.map((item) => ({ Key: dirName + '/' + item }))
         },
       };
 
@@ -44,7 +45,7 @@ export const deleteImages = async (fileList, myImages, confirm) => {
 }
 
 // 이미지 url 가져오기
-export const getImageUrl = async (formData, keyName) => {
+export const getImageUrl = async (formData, userName, dirName) => {
   try {
 
     const myBucket = new AWS.S3({
@@ -52,17 +53,24 @@ export const getImageUrl = async (formData, keyName) => {
       region: 'ap-northeast-2',
     });
 
+    const keyName = userName + '_uid_' + uuid() + '_iName_' + formData.get('image').name;
+
     const params = {
       Bucket: 'my-react-team-project',
       ContentType: 'images/jpeg',
-      Key: 'images/' + keyName,
+      Key:  dirName + '/' + keyName,
       Body: formData.get('image'),
       ACL: 'public-read'
     };
 
     const imageURL = await myBucket.upload(params).promise().then((response) => response.Location);
 
-    return imageURL;
+    const result = {
+      imageURL: imageURL,
+      keyName : keyName
+    }
+
+    return result ;
 
   } catch (error) {
     console.log(error);
@@ -73,7 +81,7 @@ export const getImageUrl = async (formData, keyName) => {
 export const extractionValue = (items, nickname) => {
   let imgList = items.map((item) => {
     if (item['insert'] && typeof item['insert'] === 'object' && item['insert'].hasOwnProperty('image')) {
-      return nickname + '_uNick_' + item['insert'].image.split('_uNick_')[1];
+      return nickname + '_uid_' + item['insert'].image.split('_uid_')[1];
     }
     return null;
   }).filter(Boolean); // falsy값 제거
