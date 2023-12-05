@@ -15,8 +15,8 @@ const PostComponent = ({ category }) => {
 
   const navigate = useNavigate();
 
-  const goToDetailPage = (post_id) => {
-    navigate(`/board/${post_id}`);
+  const goToDetailPage = (category, post_id) => {
+    navigate(`/board/${category}/${post_id}`);
   };
 
   const fetchPosts = useCallback(async () => {
@@ -73,7 +73,7 @@ const PostComponent = ({ category }) => {
     <Container>
       {posts.map((post, index) => (
         <div key={post.id} className={index !== 0 ? 'border-top border-2 mb-3' : 'mb-3'}>
-          <div onClick={() => goToDetailPage(post.id)} >
+          <div onClick={() => goToDetailPage(category, post.id)} >
             <Row>
               <Col sm={6} md={8} className='post'>
                 <p className='post-title mt-1 mb-1 fs-5 fw-bold'>
@@ -104,14 +104,15 @@ const PostComponent = ({ category }) => {
           </div>
         </div>
       ))}
+      {totalPages > 1 ?
       <div className="d-flex justify-content-center">
         <PaginationComponent
           currentPage={currentPage}
           totalPages={totalPages}
           pagesPerGroup={5}
           handlePageChange={handlePageChange}
-        />
-      </div>
+          />
+      </div> : '' }
     </Container>
   );
 };

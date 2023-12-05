@@ -9,7 +9,7 @@ const BoardPage = () => {
   const [category, setCategory] = useState('전체');
 
   const handleButtonClicked = () => {
-    navigate('/board/create');
+    navigate(`/board/${category}/create`);
   };
 
   const handleSelectCategory = (selectedKey) => {
