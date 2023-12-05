@@ -1,9 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../../../styles/ImageGallery.css'
 import { useNavigate } from 'react-router-dom'
 import { Col, Row } from 'react-bootstrap'
+import axios from 'axios'
 
 const ImageGallery = ({path}) => {
+  const [introduction, setIntroduction] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3300/about');
+        const data = response.data[0];
+        
+        setIntroduction(data.introduction);
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    };
+    fetchData();
+  }, []); 
+
   const navigate = useNavigate()
 
   return (
@@ -13,12 +30,12 @@ const ImageGallery = ({path}) => {
           <Col className="box-1 box">
             <div className='link-box rounded'>
               <div className='slide-box'>
-                <h3 className='p-4 text-white bg-dark'>About</h3>
+                <h3 className='p-4 text-white bg-dark'>소개글</h3>
                 <p className='px-4 text-white'>
-                  textarea 
+                  {introduction}
                 </p>
               </div>
-              <img src="https://www.his-j.com/kokunai/kanto/tour_info/okinawa/catchy/wp-content/uploads/2021/02/post_10242_01-730x410.jpg" className="img-ht img-fluid " />
+              <img src="https://s30876.pcdn.co/wp-content/uploads/Japan-e1634207070862.jpg.optimal.jpg" className="img-ht img-fluid " />
             </div>
           </Col>
         </Row>
@@ -30,7 +47,7 @@ const ImageGallery = ({path}) => {
           </Col>
           <Col className="gal-item">
             <div className="box-2 box">
-              <img src="https://travel.rakuten.co.jp/mytrip/sites/mytrip/files/styles/main_image/public/migration_article_images/ranking/spot-itoshima-key.jpg?itok=1ff5szrC" className="img-ht img-fluid rounded" />
+              <img src="https://www.trafalgar.com/media/kjtp14lq/classic-japan-guided-tour-1.jpg" className="img-ht img-fluid rounded" />
             </div>
           </Col>
         </Row>

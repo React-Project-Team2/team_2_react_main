@@ -11,7 +11,7 @@ const NewPost = (props) => {
         <Container className='post-box'>
         <Link to={`/board/${props.post_id}`} className='link-style'>
             <Row className='title mb-2' ><Col>{props.title}</Col></Row>
-            <Row className='content'><Col>{props.content}</Col></Row>
+            <Row className='content mb-4'><Col>{props.content}</Col></Row>
             <Row><Col>작성자 : {props.name}</Col></Row>
             <Row><Col>작성일 : {props.created_at}</Col></Row>
             <Row>
