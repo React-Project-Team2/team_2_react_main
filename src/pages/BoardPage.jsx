@@ -24,8 +24,8 @@ const BoardPage = () => {
           <h3>sub name</h3>
         </div>
         <Container className="bg-white p-0 rounded white-board">
-          <div className='img-box'>
-            <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="img-ht img-fluid rounded-top" alt='후쿠오카 이미지(야경)' />
+          <div className='boardpage-img-box'>
+            <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="boardpage-img rounded-top" alt='후쿠오카 이미지(야경)' />
           </div>
           <Container>
             <Container className='my-3'>
