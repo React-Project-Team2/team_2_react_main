@@ -9,9 +9,8 @@
 
 .image-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
-  grid-template-rows: repeat(3, 1fr); /* 3 rows with equal height */
-  gap: 10px; /* Adjust the gap between images as needed */
+  grid-template-columns: repeat(2, 1fr); /* 가로에 2개의 열을 가짐 */
+  gap: 10px; /* 이미지 간의 간격, 필요에 따라 조정 */
 }
 
 .image-wrapper {
