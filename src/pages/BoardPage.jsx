@@ -52,7 +52,7 @@ const BoardPage = () => {
                 </Col>
               </Row>
             </Container>
-            <div className='border-top'>
+            <div className='border-top border-dark border-2'>
               <PostComponent category={category} />
             </div>
           </Container>
