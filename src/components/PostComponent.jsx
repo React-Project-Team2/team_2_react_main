@@ -76,20 +76,20 @@ const PostComponent = ({ category }) => {
           <div onClick={() => goToDetailPage(post.id)} >
             <Row>
               <Col sm={6} md={8} className='post'>
-                <div className='post-title h5'>
+                <p className='post-title mt-1 mb-1 fs-5 fw-bold'>
                   {post.title}
-                </div>
-                <div className='post-content'>
+                </p>
+                <p className='post-content mb-1'>
                   {post.content.map(item => item.insert).join('\n').replace(/^\s+|\s+$/g, '')}
-                </div>
+                </p>
               </Col>
               <Col sm={3} md={2} className='d-flex align-items-center'>
-                <div className='post-create-at'>
+                <p className='post-create-at m-0'>
                   {post.created_at}
-                </div>
+                </p>
               </Col>
               <Col sm={3} md={2}>
-                <div className='d-flex flex-column justify-content-center mr-3 pt-3'>
+                <div className='justify-content-center mr-3 pt-3'>
                   <div>
                     <Eye className='w-3 me-2' />
                     {post.views}
