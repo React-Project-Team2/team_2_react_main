@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Card, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
+import { Eye, ChatRight } from 'react-bootstrap-icons';
 import axios from 'axios';
-import BoardPagination from './BoardPagination.jsx';
+import PaginationComponent from './PaginationComponent';
+import '../styles/PostComponent.css'
 
-const PostComponent = () => {
+const PostComponent = ({ category }) => {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [commentCounts, setCommentCounts] = useState({});
+  const postsPerPage = 10;
 
   const navigate = useNavigate();
 
@@ -18,18 +21,24 @@ const PostComponent = () => {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:3300/posts`, {
-        params: {
-          _page: currentPage,
-          _limit: 10
-        }
-      });
+      const params = {
+        _page: currentPage,
+        _limit: postsPerPage,
+        _sort: 'created_at',
+        _order: 'desc',
+      };
+
+      if (category !== '전체') {
+        params.category = category;
+      }
+
+      const response = await axios.get(`http://localhost:3300/posts`, { params });
       setPosts(response.data);
-      setTotalPages(Math.ceil(response.headers['x-total-count'] / 10));
+      setTotalPages(Math.ceil(response.headers['x-total-count'] / postsPerPage));
     } catch (error) {
       console.error(error);
     }
-  }, [currentPage]);
+  }, [currentPage, category]);
 
   useEffect(() => {
     fetchPosts();
@@ -37,13 +46,6 @@ const PostComponent = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-  };
-
-  const truncateText = (text, maxLength) => {
-    if (text.length > maxLength) {
-      return text.substring(0, maxLength) + '...';
-    }
-    return text;
   };
 
   useEffect(() => {
@@ -70,35 +72,45 @@ const PostComponent = () => {
   return (
     <Container>
       {posts.map((post) => (
-        <Card key={post.id} className='border-0 mb-3'>
-          <Card.Body>
+        <div key={post.id} className='border-0 mb-3'>
+          <div onClick={() => goToDetailPage(post.id)} >
             <Row>
-              <Col>
-                <Card.Title onClick={() => goToDetailPage(post.id)} style={{cursor: "pointer"}}>
+              <Col sm={6} md={8} className='post'>
+                <div className='post-title h5'>
                   {post.title}
-                </Card.Title>
-                <Card.Text>
-                  {truncateText(post.content.map(item => item.insert).join(' '), 123)}
-                </Card.Text>
+                </div>
+                <div className='post-content'>
+                  {post.content.map(item => item.insert).join('\n').replace(/^\s+|\s+$/g, '')}
+                </div>
               </Col>
-              <Col>
-                <div className='d-flex justify-content-end mr-3 pt-3'>
+              <Col sm={3} md={2} className='d-flex align-items-center'>
+                <div className='post-create-at'>
+                  {post.created_at}
+                </div>
+              </Col>
+              <Col sm={3} md={2}>
+                <div className='d-flex flex-column justify-content-center mr-3 pt-3'>
                   <div>
-                    <img src='https://cdn.pixabay.com/photo/2016/12/18/11/04/eye-1915455_1280.png' width='27px' alt='조회수' />
-                    {/* {post.views} */}
+                    <Eye className='w-3 me-2' />
+                    {post.views}
                   </div>
                   <div>
-                    <img src='https://cdn.icon-icons.com/icons2/37/PNG/32/comments_3979.png' width='20px' alt='댓글' />
+                    <ChatRight className='me-2' />
                     {commentCounts[post.id]}
                   </div>
                 </div>
               </Col>
             </Row>
-          </Card.Body>
-        </Card>
+          </div>
+        </div>
       ))}
       <div className="d-flex justify-content-center">
-        <BoardPagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pagesPerGroup={5}
+          handlePageChange={handlePageChange}
+        />
       </div>
     </Container>
   );

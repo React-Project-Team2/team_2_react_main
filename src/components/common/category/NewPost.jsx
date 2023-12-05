@@ -1,20 +1,28 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Col} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Eye } from 'react-bootstrap-icons';
+import { Col, Container, Row } from 'react-bootstrap';
+import '../../../styles/NewPost.css'
+
 
 const NewPost = (props) => {
     return (
-        <Col className='mx-5 pb-2'>
-            <Link to={`/board/${props.post_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <h5><b>{props.title}</b></h5>
-                <p style={{ overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-line', lineHeight: '1.2' }}>{props.content}</p>
-                <p><b>{props.name}</b>  {props.created_at}</p>
-                <i class="bi bi-chat-right"><Eye/>  {props.view}</i>
-                
-            </Link>
-        </Col>
+        <Container className='post-box'>
+        <Link to={`/board/${props.post_id}`} className='link-style'>
+            <Row className='title mb-2' ><Col>{props.title}</Col></Row>
+            <Row className='content'><Col>{props.content}</Col></Row>
+            <Row><Col>작성자 : {props.name}</Col></Row>
+            <Row><Col>작성일 : {props.created_at}</Col></Row>
+            <Row>
+                <Col className=''>{props.category}</Col>
+                <Col/>
+                <Col>
+                    <div><Eye className='me-2' /><span>{props.views} views</span></div>
+                </Col>
+            </Row>
+        </Link>
+        </Container>
     )
 }
 

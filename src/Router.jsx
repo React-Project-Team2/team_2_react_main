@@ -8,6 +8,7 @@ import SignUpPage from './pages/SignUpPage'
 import SignInPage from './pages/SignInPage'
 import BoardInput from './pages/BoardInput'
 import PostPage from './pages/PostPage'
+import AuthRouter from './components/common/Auth/AuthRouter';
 
 const Router = () => {
   return (
@@ -18,8 +19,16 @@ const Router = () => {
       <Route path="/signUp" element={<SignUpPage />} />
       <Route path="/signIn" element={<SignInPage />} />
       <Route path="/board/:post_id" element={<PostPage />} />
-      <Route path="/board/create" element={<BoardInput page='create' />} />
-      <Route path="/board/update/:post_id" element={<BoardInput page='update' />} />
+      <Route path="/board/create" element={
+        <AuthRouter>
+          <BoardInput page='create' />
+        </AuthRouter>
+      } />
+      <Route path="/board/update/:post_id" element={
+        <AuthRouter>
+          <BoardInput page='update' />
+        </AuthRouter>
+      } />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/about/update" element={<AboutPageUpdate />} />
     </Routes>
