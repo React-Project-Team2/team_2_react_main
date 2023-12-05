@@ -25,7 +25,7 @@ const SignInPage = () => {
     };
 
     try {
-      const usersResponse = await axios.get('http://localhost:33ß00/user');
+      const usersResponse = await axios.get('http://localhost:3300/user');
       const users = usersResponse.data;
   
       const user = users.find((user) => user.userId === formData.userId && user.password === formData.password);
@@ -45,9 +45,8 @@ const SignInPage = () => {
 
   return (
     <Container fluid className='p-0'>
-
       <div className="p-5 bg-image d-flex justify-content-center align-items-center position-relative login-image">
-        <Card className='mx-5 mb-5 p-5 shadow-5 w-25 position-absolute login-container'>
+        <Card className='login-container'>
           <Form onSubmit={handleSubmit}>
             <Form.Group className='mb-4'>
               <Form.Label>아이디</Form.Label>
@@ -77,7 +76,6 @@ const SignInPage = () => {
           </Form>
         </Card>
       </div>
-      
     </Container>
   )
 }

@@ -7,7 +7,14 @@
 }
 
 .register-container {
+  width: 50%;
   margin-top: -100px;
   background-color: hsla(0, 0%, 100%, 0.7) !important;
   backdrop-filter: blur(30px) !important;
+}
+
+@media (max-width: 1080px) {
+  .register-container {
+    width: 70%;
+  }
 }

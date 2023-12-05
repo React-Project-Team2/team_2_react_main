@@ -7,7 +7,17 @@
 }
 
 .login-container {
-  
+  position: absolute;
+  width: 25%;
+  margin: 5rem;
+  padding: 5rem;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
   background-color: hsla(0, 0%, 100%, 0.5) !important;
   backdrop-filter: blur(30px) !important;
+}
+
+@media (max-width: 1080px) {
+  .login-container {
+    width: 70%;
+  }
 }
