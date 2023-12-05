@@ -55,7 +55,7 @@ const AboutPage = () => {
           <div className="image-container">
             {images.map((image, index) => (
               <div className="image-wrapper" key={index}>
-                <img src={image} alt={`Image ${index + 1}`} />
+                <img src={image} alt={`${index + 1}`} />
               </div>
             ))}
           </div>
