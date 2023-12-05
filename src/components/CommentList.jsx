@@ -59,9 +59,14 @@ const CommentList = ({ postId, onData, user }) => {
     <>
       <CommentForm postId={postId} user={user} created_at={created_at} onCommentSubmit={fetchComments} />
       <ListGroup className='mt-3'>
-        <ListGroup.Item className='p-2 text-muted'>
-          {comments.length > 0 ? `Comments` : '댓글이 없습니다.'}
-        </ListGroup.Item>
+        {comments.length > 0 ? 
+          <ListGroup.Item className='p-2 text-muted'>
+            Comments
+          </ListGroup.Item> :
+          <ListGroup.Item className='bg-light p-5 text-center text-muted fs-5'>
+            첫 댓글을 작성해주세요!
+          </ListGroup.Item>
+        }
         {comments.slice((currentPage - 1) * commentsPerPage, currentPage * commentsPerPage).map((comment) => (
           <ListGroup.Item key={comment.id} className='p-0 list-item'>
             <Comment comment={comment} postId={postId} user={user} created_at={created_at} onCommentChange={fetchComments} />

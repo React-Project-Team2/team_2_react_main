@@ -1,19 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/BoardPage.css';
 import PostComponent from '../components/PostComponent.jsx';
 import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 
 const BoardPage = () => {
   const navigate = useNavigate();
+  const { category_name } = useParams();
   const [category, setCategory] = useState('전체');
 
+  useEffect(() => {
+    setCategory(category_name || '전체');
+  }, [category_name]);
+
   const handleButtonClicked = () => {
-    navigate('/board/create');
+    navigate(`/board/${category}/create`);
   };
 
   const handleSelectCategory = (selectedKey) => {
     setCategory(selectedKey);
+    navigate(`/board/${selectedKey}`);
   }
 
   return (
@@ -24,8 +30,8 @@ const BoardPage = () => {
           <h3>sub name</h3>
         </div>
         <Container className="bg-white p-0 rounded white-board">
-          <div className='img-box'>
-            <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="img-ht img-fluid rounded-top" alt='후쿠오카 이미지(야경)' />
+          <div className='boardpage-img-box'>
+            <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="boardpage-img rounded-top" alt='후쿠오카 이미지(야경)' />
           </div>
           <Container>
             <Container className='my-3'>
@@ -52,9 +58,7 @@ const BoardPage = () => {
                 </Col>
               </Row>
             </Container>
-            <div className='border-top'>
-              <PostComponent category={category} />
-            </div>
+            <PostComponent category={category} />
           </Container>
         </Container>
       </div>
