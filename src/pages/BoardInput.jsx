@@ -1,4 +1,4 @@
-import { React, useState, useRef, useMemo, useEffect } from 'react';
+import { React, useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap'
 import ReactQuill, { Quill } from 'react-quill';
@@ -6,7 +6,11 @@ import ImageResize from 'quill-image-resize';
 import 'react-quill/dist/quill.snow.css';
 
 import axios from 'axios';
+// import AWS from 'aws-sdk';
+import uuid from 'react-uuid';
 import '../styles/BoardInput.css'
+
+import { getImageUrl, deleteImages, configureAWS, extractionValue } from '../components/common/aws/awsServices';
 
 // 이미지 크기조절
 Quill.register('modules/ImageResize', ImageResize);
@@ -21,25 +25,49 @@ const BoardInput = ({ page }) => {
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
+  const [postData, setPostData] = useState({});
+  const [fileList, setFileList] = useState([]);
 
   const today = new Date();
+  const month = (today.getMonth() + 1).toString().padStart(2, '0'); // 2자리보다 짧으면 0을 붙인다
+  const day = today.getDate().toString().padStart(2, '0');
+  const hours = today.getHours().toString().padStart(2, '0');
+  const minutes = today.getMinutes().toString().padStart(2, '0');
+  const seconds = today.getSeconds().toString().padStart(2, '0');
 
-  let month = today.getMonth() + 1;
-  let day = today.getDate();
-  let hours = today.getHours();
-  let minutes = today.getMinutes();
-  let seconds = today.getSeconds();
-  
-  month = month < 10 ? '0' + month : month;
-  day = day < 10 ? '0' + day : day;
-  hours = hours < 10 ? '0' + hours : hours;   
-  minutes = minutes < 10 ? '0' + minutes : minutes; 
-  seconds = seconds < 10 ? '0' + seconds : seconds;
+  const date = `${today.getFullYear()}-${month}-${day}`;
+  const time = `${hours}:${minutes}:${seconds}`;
 
-  let date = today.getFullYear() + '-' + month + "-" + day;
-  let time = hours + ':' + minutes + ':' + seconds;
+  useEffect(() => {
+    configureAWS();
+  }, []);
 
-  //  추후에 이미지를 AWS S3에 저장할 수 있도록 만들기
+  const imageHandler = useCallback( () => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const keyName = user.nickname + '_uNick_' + uuid() + '_iName_' + formData.get('image').name;
+
+      try {
+        const imageURL = await getImageUrl(formData, keyName);
+        const editor = quillRef.current.editor;
+        const range = editor.getSelection();
+        editor.insertEmbed(range.index, 'image', imageURL);
+      } catch (error) {
+        console.log(error.message);
+      }
+
+      setFileList(prevFileList => [...prevFileList, keyName]);
+    };
+  }, [user.nickname]);
+
   // quill 툴바
   const modules = useMemo(() => {
     return {
@@ -59,42 +87,65 @@ const BoardInput = ({ page }) => {
           [{ 'font': [] }],                                 // 폰트
           [{ 'align': [] }],                                // 정렬
           ['link', 'image'],
-          ['clean'] 
-        ], 
+          ['clean']
+        ],
+        handlers: { image: imageHandler },
       },
-      // handlers: { image: imageHandler },
       ImageResize: {
         parchment: Quill.import('parchment')
       },
     }
-  }, []);
+  }, [imageHandler]);
 
   // DB에서 post 불러오기 : Read
   const showPost = async (id) => {
-    try{
+    try {
       const response = await fetch(url + '/' + id);
       const data = await response.json();
       return data;
-    } catch(error){
+    } catch (error) {
       console.log(error.message);
     }
   }
 
+  const checkUser = useCallback((value) => {
+    if (user.id !== value) {
+      alert('권한이 없습니다.');
+      navigate('/board');
+    }
+  }, [user.id, navigate]);
+
   useEffect(() => {
-    if(page === 'update'){
+    if (page === 'update') {
+
       const fetchData = async () => {
         const result = await showPost(post_id);
+
+        checkUser(result.user_id)
+
         setCategory(result.category);
         setTitle(result.title);
         setContent(result.content);
+        setPostData(result);
+
+        let fetchImgList = result.content.map((item) => {
+          if (item['insert'] && typeof item['insert'] === 'object' && item['insert'].hasOwnProperty('image')) {
+            return result.nickname + '_uNick_' + item['insert'].image.split('_uNick_')[1];
+          }
+          return null;
+        }).filter(Boolean);
+
+        setFileList(fetchImgList);
       };
       fetchData();
+      console.log('useEffect 확인');
+
+      // 사용자 정보 확인
     }
-  }, [page, post_id]);
+  }, [page, post_id, checkUser]);
 
   // DB에 저장 : Create
   const createPost = async (formData) => {
-    
     try {
       const response = await axios.post(url, formData);
 
@@ -102,7 +153,7 @@ const BoardInput = ({ page }) => {
         alert('등록 완료');
         navigate('/board');
       }
-      
+
     } catch (error) {
       console.log(error.message);
     }
@@ -116,7 +167,6 @@ const BoardInput = ({ page }) => {
         alert('수정 완료');
         navigate('/board');
       }
-      
     } catch (error) {
       console.log(error.message);
     }
@@ -125,7 +175,6 @@ const BoardInput = ({ page }) => {
   // 입력확인
   const checkForm = () => {
     const quillContent = quillRef.current.getEditor().editor.delta.ops;
-    // const quillContent = quillRef.current.value;
 
     let formData = {
       category: category,
@@ -134,39 +183,44 @@ const BoardInput = ({ page }) => {
     }
 
     for (let key in formData) {
-        if (formData[key] === '' || (key === 'content' && formData[key][0]['insert'] === '\n')) return alert('입력창을 확인하세요');
-      }
-      
-    for (let key in formData) {
-      if (formData[key] === '') return alert('입력창을 확인하세요');
+      if (formData[key] === '' || (key === 'content' && (formData[key].length === 1  && formData[key][0]['insert'] === '\n'))) return alert('입력창을 확인하세요');
     }
 
-    if(page === 'create'){
+    let myImgList = extractionValue(quillContent, user.nickname);
+
+    if (myImgList.length !== fileList.length) {
+      deleteImages(fileList, new Set(myImgList), 'others');
+    }
+
+    if (page === 'create') {
       let addData = {
-        user_id : user.id,
+        user_id: user.id,
         nickname: user.nickname,
-        views : 0,
-        created_at : date + ' ' + time,
+        views: 0,
+        created_at: date + ' ' + time,
       }
       formData = { ...formData, ...addData };
       createPost(formData);
 
-    } else if(page === 'update') {
+    } else if (page === 'update') {
       updatePost(formData);
     }
-  }  
+  }
 
   const cancelEv = () => {
-    if(page === 'create'){
+    if (page === 'create') {
+      deleteImages(fileList, new Set(), 'delete');
       navigate('/board');
-    } else if(page === 'update'){
+    } else if (page === 'update') {
+      let imgList = extractionValue(postData.content, user.nickname);
+      deleteImages(fileList, new Set(imgList), 'others');
       navigate('/board/' + post_id);
     }
   }
 
   return (
     <>
-      <div className='container-md py-3' id='board-insert-div'>
+      <div className='container-md py-5' id='board-insert-div'>
         <Form className='input-form' >
           <Form.Group className='mb-3'>
             <Form.Label>카테고리</Form.Label>
@@ -179,7 +233,7 @@ const BoardInput = ({ page }) => {
               <option value="사가">사가</option>
             </Form.Select>
           </Form.Group>
-        
+
           <Form.Group className="mb-3" >
             <Form.Label htmlFor='title'>제목</Form.Label>
             <Form.Control type='text' name="title" id='title' placeholder="제목을 입력하세요" value={title} onChange={event => setTitle(event.target.value)} />
@@ -202,8 +256,8 @@ const BoardInput = ({ page }) => {
         </Form>
 
         <div className='d-md-flex justify-content-end'>
-          <Button variant="outline-warning" onClick={ cancelEv }>취소</Button>
-          <Button className='ms-3' variant="outline-secondary" onClick={ checkForm } >저장하기</Button>
+          <Button variant="outline-warning" onClick={cancelEv}>취소</Button>
+          <Button className='ms-3' variant="outline-secondary" onClick={checkForm} >저장하기</Button>
         </div>
 
       </div>
