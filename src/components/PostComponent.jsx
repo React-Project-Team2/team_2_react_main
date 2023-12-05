@@ -69,52 +69,64 @@ const PostComponent = ({ category }) => {
     fetchCommentCounts();
   }, [posts]);
 
-  return (
-    <Container>
-      {posts.map((post, index) => (
-        <div key={post.id} className={index !== 0 ? 'border-top border-2 mb-3' : 'mb-3'}>
-          <div onClick={() => goToDetailPage(category, post.id)} >
-            <Row>
-              <Col sm={6} md={8} className='post'>
-                <p className='post-title mt-1 mb-1 fs-5 fw-bold'>
-                  {post.title}
-                </p>
-                <p className='post-content mb-1'>
-                  {post.content.map(item => item.insert).join('\n').replace(/^\s+|\s+$/g, '')}
-                </p>
-              </Col>
-              <Col sm={3} md={2} className='d-flex align-items-center'>
-                <p className='post-create-at m-0'>
-                  {post.created_at}
-                </p>
-              </Col>
-              <Col sm={3} md={2}>
-                <div className='justify-content-center mr-3 pt-3'>
-                  <div>
-                    <Eye className='w-3 me-2' />
-                    {post.views}
+  if (totalPages > 0) {
+    return (
+      <Container className='border-top border-dark border-2 post-main-box'>
+        {posts.map((post, index) => (
+          <div key={post.id} className={index !== 0 ? 'border-top border-2 mb-3' : 'mb-3'}>
+            <div onClick={() => goToDetailPage(category, post.id)} >
+              <Row>
+                <Col sm={6} md={8} className='post'>
+                  <p className='post-title mt-1 mb-1 fs-5 fw-bold'>
+                    {post.title}
+                  </p>
+                  <p className='post-content mb-1'>
+                    {post.content.map(item => item.insert).join('\n').replace(/^\s+|\s+$/g, '')}
+                  </p>
+                </Col>
+                <Col sm={3} md={2} className='d-flex align-items-center'>
+                  <p className='post-create-at m-0'>
+                    {post.created_at}
+                  </p>
+                </Col>
+                <Col sm={3} md={2}>
+                  <div className='justify-content-center mr-3 pt-3'>
+                    <div>
+                      <Eye className='w-3 me-2' />
+                      {post.views}
+                    </div>
+                    <div>
+                      <ChatRight className='me-2' />
+                      {commentCounts[post.id]}
+                    </div>
                   </div>
-                  <div>
-                    <ChatRight className='me-2' />
-                    {commentCounts[post.id]}
-                  </div>
-                </div>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+            </div>
           </div>
-        </div>
-      ))}
-      {totalPages > 1 ?
-      <div className="d-flex justify-content-center">
-        <PaginationComponent
-          currentPage={currentPage}
-          totalPages={totalPages}
-          pagesPerGroup={5}
-          handlePageChange={handlePageChange}
-          />
-      </div> : '' }
-    </Container>
-  );
+        ))}
+        {totalPages > 1 ?
+        <div className="d-flex justify-content-center">
+          <PaginationComponent
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pagesPerGroup={5}
+            handlePageChange={handlePageChange}
+            />
+        </div> : '' }
+      </Container>
+    );
+  } else {
+    return(
+      <Container className='post-main-box'>
+        <p className='text-center fs-4 mt-5'>
+          해당 카테고리의 글이 없습니다.
+        </p>
+      </Container>
+    )
+  }
+
+  
 };
 
 export default PostComponent;
