@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/BoardPage.css';
 import PostComponent from '../components/PostComponent.jsx';
 import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 
 const BoardPage = () => {
   const navigate = useNavigate();
+  const { category_name } = useParams();
   const [category, setCategory] = useState('전체');
+
+  useEffect(() => {
+    setCategory(category_name || '전체');
+  }, [category_name]);
 
   const handleButtonClicked = () => {
     navigate(`/board/${category}/create`);
@@ -14,6 +19,7 @@ const BoardPage = () => {
 
   const handleSelectCategory = (selectedKey) => {
     setCategory(selectedKey);
+    navigate(`/board/${selectedKey}`);
   }
 
   return (
