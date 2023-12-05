@@ -27,14 +27,14 @@ const SignUpPage = () => {
     };
   
     try {
-      const usersResponse = await axios.get('http://localhost:3100/user');
+      const usersResponse = await axios.get('http://localhost:3300/user');
       const users = usersResponse.data;
 
       if (users.find((user) => user.userId === formData.userId)) {
         alert('이미 존재하는 아이디입니다.');
         return;
       }
-      const response = await axios.post('http://localhost:3100/user', formData);
+      const response = await axios.post('http://localhost:3300/user', formData);
       
       if (response.status === 201) {
         alert(`${formData.userId}님, 회원가입 축하합니다. 다시 로그인해주세요.`);
