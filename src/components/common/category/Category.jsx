@@ -4,9 +4,9 @@ import { Col, Image, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { FileEarmark } from 'react-bootstrap-icons';
 
-const Category = ({ img, name, detail, postCount }) => {
+const Category = ({ img, name, detail, postCount, category }) => {
   return(
-    <Link to="/board" style={{ textDecoration: 'none', color: 'inherit' }}>
+    <Link to={`/board/${category}`} style={{ textDecoration: 'none', color: 'inherit' }}>
       <Row className='p-3'>
         <Col style={{ maxWidth : '150px'}}>
           <Image src={img} className="rounded" width={150} height={90} alt="" />

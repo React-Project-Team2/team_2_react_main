@@ -24,7 +24,7 @@ const MainPage = () => {
         // content 배열의 insert 속성을 합쳐서 출력
         const processedPosts = latestPosts.map(post => ({
           ...post,
-          content: post.content.map(item => item.insert).join(' ')
+          content: post.content.filter(item => !item.insert.image).map(item => item.insert).join(' ')
         }));
         
         setPosts(processedPosts);
@@ -72,7 +72,6 @@ const MainPage = () => {
       <div className='w-auto custom-background '>
         <div className="pb-5 pt-5 container text-center">
           <h1>현지 학기제</h1>
-          <p>sub name</p>
         </div>
       {/* 카테고리 컨테이너 */}
         <div className="bg-white text-dark container p-0 rounded-3">
@@ -82,34 +81,39 @@ const MainPage = () => {
             </Row>
             <Category
               name = "후쿠오카 현" 
-              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              img = "https://www.agoda.com/wp-content/uploads/2019/08/Fukuoka-Castle-cherry-blossoms-best-time-to-visit-Kyushu.jpg" 
               detail='수상 스포츠를 즐길 수 있는 해안선, 하이킹 코스로 멋진 산세가 우거진 내륙, 세계적인 수준의 해산물과 라멘의 고향으로 떠나는 일상 탈출 여행'
               postCount= {categoryCounts['후쿠오카'] || 0}
+              category= '후쿠오카'
               />
             <Category
               name= "나가사키 현"
-              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              img = "https://www.budgetrentacar.co.jp/images/foreign/shop/place/inasayama-park.jpg" 
               detail='완만한 언덕과 숲이 우거진 섬을 배경 삼아 고대 문화가 꽃피었고 국제 무역의 역사가 살아 숨 쉬는 곳'
               postCount= {categoryCounts['나가사키'] || 0}
+              category= '나가사키'
               />
             <Category
               name= "쿠마모토 현"
-              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              img = "https://res-4.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,f_auto,fl_lossy,q_auto/v1514403676/kumamoto/Kumamoto1541_8" 
               detail='구마모토 재건을 돕는 온천 리조트와 웅장한 성채, 이름난 현지 음식 쿠마모토현의 웅대한 자연은 외국인 관광객분들께 언제나 사랑받고 있는 매력포인트입니다.'
               postCount= {categoryCounts['쿠마모토'] || 0}
+              category= '쿠마모토'
               />
             <Category
               name= "사가 현"
-              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              img = "https://res-2.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,f_auto,fl_lossy,q_auto/v1514401134/saga/Saga1189_2" 
               detail='한때 중대한 교역의 중심지이자 전통식 도자기 산지였던, 작은 섬이 점점이 흩어져 있고 한반도를 마주 보고 있는 해안가의 사가현'
               postCount= {categoryCounts['사가'] || 0}
-            />
+              category= '사가'
+              />
             <Category
               name= "오이타 현"
-              img = "https://cdn.pixabay.com/photo/2023/08/16/23/49/snail-8195174_1280.jpg" 
+              img = "https://res-3.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,f_auto,fl_lossy,q_auto/v1514407013/oita/Oita1991_1" 
               detail='풍부한 예술, 종교적 유산과 야바케이 협곡 및 벳푸 온천과 같은 천혜의 자연 경관이 공존하는 오이타는 사람의 손길이 많이 닿지 않아 본격 탐험 여행지로도 손색이 없는 곳'
               postCount= {categoryCounts['오이타'] || 0}
-            />
+              category= '오이타'
+              />
             <Row className='px-5 p-4 category-title'>
               신규 게시물
             </Row>

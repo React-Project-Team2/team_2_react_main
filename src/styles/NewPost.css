@@ -11,8 +11,8 @@
 }
 
 .post-box .content {
-    height: 168px;
-    -webkit-line-clamp: 7;
+    height: 144px;
+    -webkit-line-clamp: 6;
 }
 
 .link-style {
