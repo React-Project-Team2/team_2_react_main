@@ -72,7 +72,7 @@ const PostComponent = ({ category }) => {
   return (
     <Container>
       {posts.map((post) => (
-        <div className='border-0 mb-3'>
+        <div key={post.id} className='border-0 mb-3'>
           <div onClick={() => goToDetailPage(post.id)} >
             <Row>
               <Col sm={6} md={8} className='post'>
