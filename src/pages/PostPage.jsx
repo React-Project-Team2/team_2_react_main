@@ -10,16 +10,22 @@ import ContainerNavbar from '../components/common/containNavbar/ContainerNav'
 import '../styles/PostPage.css';
 import CommentList from '../components/CommentList';
 import ConfirmModal from '../components/common/modals/ConfirmModal';
+import { configureAWS, deleteImages, extractionValue } from '../components/common/aws/awsServices';
 
 const PostPage = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
+
   const url = 'http://localhost:3300/';
 
   const { post_id } = useParams();
   const [postData, setPostData] = useState({});
   const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    configureAWS();
+  }, []);
 
   const modules = useMemo(() => {
     return {
@@ -94,6 +100,7 @@ const PostPage = () => {
     setShowModal(false);
     try {
       deleteComments(comments);
+      deleteImages(extractionValue(postData.content, user.nickname), new Set(), 'delete');
       const response = await axios.delete(url + 'posts/' + id);
       console.log(response);
       if (response.status === 200) {
@@ -104,12 +111,9 @@ const PostPage = () => {
     }
   }
 
-  console.log(postData);
-
   // CommentList에서 Comments 받기
   const getCommentList = (data) => {
     if (data) {
-      console.log(data);
       setComments(data);
     }
   }
@@ -136,9 +140,9 @@ const PostPage = () => {
             <Row>
               <Col xs={9}>
                 <div className='d-flex flex-column'>
-                  <Row className='d-flex mb-4'>
+                  <Row className='d-flex mb-4' style={{ paddingLeft: '15px' }}>
                     <Col xs={9} >
-                      <div className='fs-3 fw-bolder'><span>{postData.title}</span></div>
+                      <div className='fs-1 fw-bolder text-truncate'><span>{postData.title}</span></div>
                       <div className='fs-6 fw-lighter text-body-secondary'><span>{postData.category}</span></div>
                     </Col>
                     <Col xs={3} className='d-flex flex-column justify-content-end' >
@@ -159,15 +163,15 @@ const PostPage = () => {
                 </div>
               </Col>
               {/* 사이드 */}
-              <Col xs={3}>
-                <div className='mb-3'>
-                  <div><Eye className='me-2' /><span>{postData.views} views</span></div>
-                  <div><ChatRight className='me-2' /><span>{comments.length} comments</span></div>
+              <Col xs={3} className='px-4'>
+                <div className='mb-4'>
+                  <div className='mb-3'><Eye className='me-2' /><span>{postData.views} views</span></div>
+                  <div className='mb-3'><ChatRight className='me-2' /><span>{comments.length} comments</span></div>
                 </div>
                 <div className='d-md-flex flex-column'>
                   <Button className='mb-2' variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
                   {
-                    (user === null || user.id === postData.user_id) ? <>
+                    (user !== null && user.id === postData.user_id) ? <>
                       <Button className='mb-2' variant="outline-secondary" onClick={() => navigate('/board/update/' + post_id)} >수정하기</Button>
                       <Button variant="outline-danger" onClick={() => setShowModal(true)}  >삭제하기</Button>
                     </> : ''
