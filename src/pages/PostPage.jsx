@@ -4,9 +4,7 @@ import { Button, Row, Col, Container } from 'react-bootstrap'
 import { Eye, ChatRight } from 'react-bootstrap-icons';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
-// import ImageResize from 'quill-image-resize';
-// import 'react-quill/dist/quill.snow.css';
-import ContainerNavbar from '../components/common/containNavbar/ContainerNav'
+
 import '../styles/PostPage.css';
 import CommentList from '../components/CommentList';
 import ConfirmModal from '../components/common/modals/ConfirmModal';
@@ -19,9 +17,12 @@ const PostPage = () => {
   const url = 'http://localhost:3300/';
 
   const { post_id } = useParams();
+  const { category_name } = useParams();
   const [postData, setPostData] = useState({});
   const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  console.log(category_name);
 
   useEffect(() => {
     configureAWS();
@@ -88,7 +89,7 @@ const PostPage = () => {
       let updateViewedPostsArray = viewedPostsArray.filter((element) => element !== post_id);
       localStorage.setItem('viewedPosts', JSON.stringify(updateViewedPostsArray));
 
-      navigate('/board');
+      navigate('/board/' + category_name);
     } else {
       // 사용자가 취소 버튼을 클릭했을 때 모달 닫기
       setShowModal(false);
@@ -100,7 +101,7 @@ const PostPage = () => {
     setShowModal(false);
     try {
       deleteComments(comments);
-      deleteImages(extractionValue(postData.content, user.nickname), new Set(), 'delete');
+      deleteImages(extractionValue(postData.content, user.userId), new Set(), 'delete', 'images');
       const response = await axios.delete(url + 'posts/' + id);
       console.log(response);
       if (response.status === 200) {
@@ -132,59 +133,55 @@ const PostPage = () => {
   return (
     <>
       <div className='w-auto bg'>
-        {/* 카테고리 컨테이너 */}
-        <div className="bg-white text-dark container p-0 rounded-3">
-          <ContainerNavbar />
-          <Container className='bg-light'>
-            {/* 게시글 */}
-            <Row>
-              <Col xs={9}>
-                <div className='d-flex flex-column'>
-                  <Row className='d-flex mb-4' style={{ paddingLeft: '15px' }}>
-                    <Col xs={9} >
-                      <div className='fs-1 fw-bolder text-truncate'><span>{postData.title}</span></div>
-                      <div className='fs-6 fw-lighter text-body-secondary'><span>{postData.category}</span></div>
-                    </Col>
-                    <Col xs={3} className='d-flex flex-column justify-content-end' >
-                      <div><span className='fs-6 fw-lighter text-body-secondary' >{postData.nickname}</span></div>
-                      <div><span className='fs-6 fw-lighter text-body-secondary'>{postData.created_at}</span></div>
-                    </Col>
-                  </Row>
-                  <ReactQuill
-                    id='quill-editor'
-                    modules={modules}
-                    placeholder='내용을 입력하세요...'
-                    value={postData.content}
-                    readOnly
-                  />
-                </div>
-                <div className='container'>
-                  <CommentList postId={post_id} onData={getCommentList} user={user} />
-                </div>
-              </Col>
-              {/* 사이드 */}
-              <Col xs={3} className='px-4'>
-                <div className='mb-4'>
-                  <div className='mb-3'><Eye className='me-2' /><span>{postData.views} views</span></div>
-                  <div className='mb-3'><ChatRight className='me-2' /><span>{comments.length} comments</span></div>
-                </div>
-                <div className='d-md-flex flex-column'>
-                  <Button className='mb-2' variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
-                  {
-                    (user !== null && user.id === postData.user_id) ? <>
-                      <Button className='mb-2' variant="outline-secondary" onClick={() => navigate('/board/update/' + post_id)} >수정하기</Button>
-                      <Button variant="outline-danger" onClick={() => setShowModal(true)}  >삭제하기</Button>
-                    </> : ''
-                  }
-                  {
-                    showModal && <ConfirmModal onFlag={flagResult} title='경고창' show={true} text="정말 삭제하시겠습니까?" />
-                  }
-                </div>
-              </Col>
-            </Row>
-
-          </Container>
-        </div>
+        <Container className='bg-light text-dark container  rounded-3'>
+          <div className='d-flex w-100' style={{ padding: '24px 15px' }}>
+            <div className='fs-2 fw-bolder'><span >{postData.title}</span></div>
+          </div>
+          <Row>
+            <Col xs={9}>
+              <div className='d-flex flex-column mb-5'>
+                <Row className='d-flex mb-4' style={{ paddingLeft: '15px' }}>
+                  <Col>
+                    <div className='fs-6 fw-lighter text-body-secondary'><span>{postData.category}</span></div>
+                  </Col>
+                </Row>
+                <ReactQuill
+                  id='quill-editor'
+                  modules={modules}
+                  placeholder='내용을 입력하세요...'
+                  value={postData.content}
+                  readOnly
+                />
+              </div>
+              <div className='container'>
+                <CommentList postId={post_id} onData={getCommentList} user={user} />
+              </div>
+            </Col>
+            {/* 사이드 */}
+            <Col xs={3} className='px-4'>
+              <div className='d-flex flex-column justify-content-end mb-2' >
+                <div><span className='fs-6 fw-lighter text-body-secondary' >{postData.nickname}</span></div>
+                <div><span className='fs-6 fw-lighter text-body-secondary'>{postData.created_at}</span></div>
+              </div>
+              <div className='mb-4'>
+                <div className='mb-3'><Eye className='me-2' /><span>{postData.views} views</span></div>
+                <div className='mb-3'><ChatRight className='me-2' /><span>{comments.length} comments</span></div>
+              </div>
+              <div className='d-md-flex flex-column'>
+                <Button className='mb-2' variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
+                {
+                  (user !== null && user.id === postData.user_id) ? <>
+                    <Button className='mb-2' variant="outline-secondary" onClick={() => navigate('/board/' + category_name + '/update/' + post_id)} >수정하기</Button>
+                    <Button variant="outline-danger" onClick={() => setShowModal(true)}  >삭제하기</Button>
+                  </> : ''
+                }
+                {
+                  showModal && <ConfirmModal onFlag={flagResult} title='경고창' show={true} text="정말 삭제하시겠습니까?" />
+                }
+              </div>
+            </Col>
+          </Row>
+        </Container>
         <div className='pt-5'>
         </div>
       </div>
