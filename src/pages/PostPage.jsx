@@ -22,8 +22,6 @@ const PostPage = () => {
   const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  console.log(category_name);
-
   useEffect(() => {
     configureAWS();
   }, []);

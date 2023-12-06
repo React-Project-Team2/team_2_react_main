@@ -5,8 +5,6 @@ const AuthRouter = ({ children }) => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
 
-  console.log(user);
-
   useEffect(() => {
     if (!user) {
       alert('로그인 후 이용해 주세요');

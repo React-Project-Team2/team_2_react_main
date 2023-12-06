@@ -27,7 +27,6 @@ const BoardInput = ({ page }) => {
   const [postData, setPostData] = useState({});
   const [fileList, setFileList] = useState([]);
 
-  console.log(category_name);
   const today = new Date();
   const month = (today.getMonth() + 1).toString().padStart(2, '0'); // 2자리보다 짧으면 0을 붙인다
   const day = today.getDate().toString().padStart(2, '0');
