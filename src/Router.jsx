@@ -18,6 +18,7 @@ const Router = () => {
       <Route path="/board" element={<BoardPage />} />
       <Route path="/signUp" element={<SignUpPage />} />
       <Route path="/signIn" element={<SignInPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
       <Route path="/board/:category_name" element={<BoardPage />} />
       <Route path="/board/:category_name/:post_id" element={<PostPage />} />
       <Route path="/board/:category_name/create" element={
