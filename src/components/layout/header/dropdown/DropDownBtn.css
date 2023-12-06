@@ -1,0 +1,9 @@
+.dropdown {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .dropdown {
+    display: block;
+  }
+}
