@@ -22,12 +22,11 @@ const BoardInput = ({ page }) => {
   const { post_id } = useParams();
   const { category_name } = useParams();
   const [content, setContent] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(category_name);
   const [title, setTitle] = useState('');
   const [postData, setPostData] = useState({});
   const [fileList, setFileList] = useState([]);
 
-  console.log(category_name);
   const today = new Date();
   const month = (today.getMonth() + 1).toString().padStart(2, '0'); // 2자리보다 짧으면 0을 붙인다
   const day = today.getDate().toString().padStart(2, '0');
@@ -117,7 +116,6 @@ const BoardInput = ({ page }) => {
 
   useEffect(() => {
     if (page === 'update') {
-
       const fetchData = async () => {
         const result = await showPost(post_id);
 
@@ -139,8 +137,6 @@ const BoardInput = ({ page }) => {
       };
       fetchData();
       console.log('useEffect 확인');
-
-      // 사용자 정보 확인
     }
   }, [page, post_id, checkUser]);
 
@@ -224,7 +220,7 @@ const BoardInput = ({ page }) => {
         <Form className='input-form' >
           <Form.Group className='mb-3'>
             <Form.Label>카테고리</Form.Label>
-            <Form.Select className='w-25' id='category' name='category' value={page === 'update' ? category : category_name} onChange={event => setCategory(event.target.value)} >
+            <Form.Select className='w-25' id='category' name='category' value={category} onChange={event => setCategory(event.target.value)} >
               <option value="">선택하세요</option>
               <option value="후쿠오카">후쿠오카</option>
               <option value="나가사키">나가사키</option>
