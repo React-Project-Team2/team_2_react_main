@@ -6,6 +6,11 @@
   white-space: pre-wrap; /* 엔터키 줄바꿈 유지 */
 }
 
+.comment-container-top {
+  display: flex;
+  align-items: center;
+}
+
 .comment-nickname {
   margin-bottom: 0%;
   font-size: smaller;

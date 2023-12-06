@@ -6,11 +6,11 @@
   box-sizing: content-box;
 }
 
-.img-box{
-  height: 400px;
+.boardpage-img-box{
+  height: 300px;
 }
 
-.img-ht {
+.boardpage-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
