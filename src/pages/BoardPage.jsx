@@ -54,7 +54,7 @@ const BoardPage = () => {
                 </Col>
                 <Col sm={7} md={8}>
                 </Col>
-                <Col sm={3} md={2} className='py-1'>
+                <Col sm={3} md={2} className='d-flex justify-content-end py-1'>
                   <Button variant="secondary" onClick={handleButtonClicked}>글쓰기</Button>
                 </Col>
               </Row>
