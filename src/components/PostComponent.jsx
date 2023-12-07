@@ -76,7 +76,7 @@ const PostComponent = ({ category }) => {
           <div key={post.id} className={index !== 0 ? 'border-top border-2 mb-3' : 'mb-3'}>
             <div onClick={() => goToDetailPage(category, post.id)} >
               <Row>
-                <Col sm={6} md={8} className='post'>
+                <Col sm={5} md={7} lg={8} className='post'>
                   <p className='post-title mt-1 mb-1 fs-5 fw-bold'>
                     {post.title}
                   </p>
@@ -89,35 +89,34 @@ const PostComponent = ({ category }) => {
                     {post.created_at}
                   </p>
                 </Col>
-                <Col sm={3} md={2}>
-                  <div className='justify-content-center mr-3 pt-3'>
-                    <div>
-                      <Eye className='w-3 me-2' />
-                      {post.views}
-                    </div>
-                    <div>
-                      <ChatRight className='me-2' />
-                      {commentCounts[post.id]}
-                    </div>
-                  </div>
+                <Col sm={4} md={3} lg={2} className='d-flex align-items-center'>
+                  <Col className="d-flex justify-content-center">
+                    <Eye className='board-post-views me-2' />
+                    {post.views}
+                  </Col>
+                  <Col className="d-flex justify-content-center">
+                    <ChatRight className='board-comment-counts me-2' />
+                    {commentCounts[post.id]}
+                  </Col>
+
                 </Col>
               </Row>
             </div>
           </div>
         ))}
         {totalPages > 1 ?
-        <div className="d-flex justify-content-center">
-          <PaginationComponent
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pagesPerGroup={5}
-            handlePageChange={handlePageChange}
+          <div className="d-flex justify-content-center">
+            <PaginationComponent
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pagesPerGroup={5}
+              handlePageChange={handlePageChange}
             />
-        </div> : '' }
+          </div> : ''}
       </Container>
     );
   } else {
-    return(
+    return (
       <Container className='post-main-box'>
         <p className='text-center fs-4 mt-5'>
           해당 카테고리의 글이 없습니다.
@@ -126,7 +125,7 @@ const PostComponent = ({ category }) => {
     )
   }
 
-  
+
 };
 
 export default PostComponent;
