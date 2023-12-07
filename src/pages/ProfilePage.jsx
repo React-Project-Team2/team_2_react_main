@@ -89,7 +89,7 @@ const ProfilePage = () => {
                 <p>{profile.description}</p>
               </div>
             )}
-            // 수정 및 삭제 버튼
+            {/* 수정 및 삭제 버튼 */}
             <div className="text-center mt-4">
               <Button variant="primary" size="sm" onClick={() => toggleEdit(index)}>
                 {editMode[index] ? '저장' : '수정'}
@@ -101,7 +101,7 @@ const ProfilePage = () => {
           </Col>
         </Row>
       ))}
-      // 프로필 추가 버튼
+      {/* // 프로필 추가 버튼 */}
       <div className="text-center mt-4">
         <Button variant="success" size="sm" onClick={addProfile}>
           프로필 추가
