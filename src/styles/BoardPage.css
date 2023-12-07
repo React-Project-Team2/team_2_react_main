@@ -19,3 +19,7 @@
 .board-dropdown {
   display: block !important;
 }
+
+.button-write {
+  min-width: 74px;
+}
