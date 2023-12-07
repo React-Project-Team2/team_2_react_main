@@ -11,6 +11,7 @@ const BoardPage = () => {
 
   useEffect(() => {
     setCategory(category_name || '전체');
+    window.scrollTo(0, 0);
   }, [category_name]);
 
   const handleButtonClicked = () => {
@@ -36,8 +37,8 @@ const BoardPage = () => {
           <Container>
             <Container className='my-3'>
               <Row>
-                <Col sm={2} md={2} className='py-1'>
-                  <Dropdown onSelect={handleSelectCategory}>
+                <Col sm={2} md={2} className='category-select-dropdown py-1'>
+                  <Dropdown onSelect={handleSelectCategory} className="board-dropdown">
                     <Dropdown.Toggle variant="success">
                       {category}
                     </Dropdown.Toggle>
