@@ -15,3 +15,11 @@
   height: 100%;
   object-fit: cover;
 }
+
+.board-dropdown {
+  display: block !important;
+}
+
+.button-write {
+  min-width: 74px;
+}

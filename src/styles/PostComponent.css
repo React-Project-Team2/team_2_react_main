@@ -26,3 +26,11 @@
 .post-create-at {
   text-align: center;
 }
+
+.board-post-views {
+  margin-top: 5px;
+}
+
+.board-comment-counts {
+  margin-top: 6px;
+}

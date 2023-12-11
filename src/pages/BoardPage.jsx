@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/BoardPage.css';
 import PostComponent from '../components/PostComponent.jsx';
-import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
+import { Container, Button, Dropdown } from 'react-bootstrap';
 
 const BoardPage = () => {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ const BoardPage = () => {
 
   useEffect(() => {
     setCategory(category_name || '전체');
+    window.scrollTo(0, 0);
   }, [category_name]);
 
   const handleButtonClicked = () => {
@@ -34,29 +35,21 @@ const BoardPage = () => {
             <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="boardpage-img rounded-top" alt='후쿠오카 이미지(야경)' />
           </div>
           <Container>
-            <Container className='my-3'>
-              <Row>
-                <Col sm={2} md={2} className='py-1'>
-                  <Dropdown onSelect={handleSelectCategory}>
-                    <Dropdown.Toggle variant="success">
-                      {category}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item eventKey="전체">전체</Dropdown.Item>
-                      <Dropdown.Item eventKey="후쿠오카">후쿠오카</Dropdown.Item>
-                      <Dropdown.Item eventKey="나가사키">나가사키</Dropdown.Item>
-                      <Dropdown.Item eventKey="구마모토">구마모토</Dropdown.Item>
-                      <Dropdown.Item eventKey="오이타">오이타</Dropdown.Item>
-                      <Dropdown.Item eventKey="사가">사가</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </Col>
-                <Col sm={7} md={8}>
-                </Col>
-                <Col sm={3} md={2} className='py-1'>
-                  <Button variant="secondary" onClick={handleButtonClicked}>글쓰기</Button>
-                </Col>
-              </Row>
+            <Container className='d-flex justify-content-between flex-wrap py-1 my-3'>
+              <Dropdown className="board-dropdown my-1" onSelect={handleSelectCategory} >
+                <Dropdown.Toggle variant="success">
+                  {category}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item eventKey="전체">전체</Dropdown.Item>
+                  <Dropdown.Item eventKey="후쿠오카">후쿠오카</Dropdown.Item>
+                  <Dropdown.Item eventKey="나가사키">나가사키</Dropdown.Item>
+                  <Dropdown.Item eventKey="구마모토">구마모토</Dropdown.Item>
+                  <Dropdown.Item eventKey="오이타">오이타</Dropdown.Item>
+                  <Dropdown.Item eventKey="사가">사가</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <Button className="my-1" variant="secondary" onClick={handleButtonClicked}>글쓰기</Button>
             </Container>
             <PostComponent category={category} />
           </Container>
