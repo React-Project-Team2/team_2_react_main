@@ -15,7 +15,7 @@ const AboutPage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(apiUrl);
-        const data = response.data[0]; // Assuming there is only one about data in the response
+        const data = response.data[0]; 
 
         setIntroduction(data.introduction);
         setAdvantages(data.advantages);

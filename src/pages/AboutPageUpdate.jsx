@@ -3,104 +3,140 @@ import { Row, Col, Button, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/About.css';
+import { configureAWS, getImageUrl, deleteImages } from '../components/common/aws/awsServices';
 
 const AboutPageUpdate = () => {
   const navigate = useNavigate();
   const [introduction, setIntroduction] = useState('');
   const [advantages, setAdvantages] = useState([]);
   const [images, setImages] = useState([]);
+  const [imageList, setImageList] = useState([]);
   const apiUrl = 'http://localhost:3300/about/3';
 
   useEffect(() => {
+    configureAWS();
     const fetchData = async () => {
       try {
         const response = await axios.get(apiUrl);
-  
-        // data가 존재하는지와 introduction이 정의되어 있는지 확인
+
         if (!response.data || response.data.introduction === undefined) {
           console.error('Invalid response data:', response.data);
           return;
         }
-  
+
         const data = response.data;
-  
-        // 데이터의 구조에 맞게 상태 설정
+
         setIntroduction(data.introduction);
         setAdvantages([...data.advantages]);
         setImages([...data.images]);
+
+        let imgList = data.images.map((item) => {
+          const uidPart = item.match(/_uid_([^_]+)_/);
+          return uidPart ? 'about/admin_uid_' + uidPart[1] + '.jpg' : null;
+        }).filter(Boolean); // falsy값 제거    
+
+        console.log(imgList);
+        setImageList([...imgList]);
       } catch (error) {
         console.error('Error fetching data:', error.message);
       }
     };
-  
+
     fetchData();
   }, []);
 
-
+  // 소개 내용 변경
   const handleIntroductionChange = (event) => {
     setIntroduction(event.target.value);
   };
 
+  // 장점 변경 
   const handleAdvantageChange = (index, event) => {
     const newAdvantages = [...advantages];
     newAdvantages[index] = event.target.value;
     setAdvantages(newAdvantages);
   };
 
-  const handleImageChange = (index, event) => {
-    const newImages = [...images];
-    newImages[index] = event.target.value;
-    setImages(newImages);
-  };
-
+  // 저장 버튼
+  // 폼 제출
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
+    // 업로드되지 않은 이미지 필터링
+    const uploadedImages = images.filter((image) => image);
+  
     const updatedData = {
       introduction,
       advantages,
-      images
+      images: uploadedImages,
     };
-
+  
     try {
       await axios.put(apiUrl, updatedData);
-      // Navigate to the AboutPage after updating
       navigate('/about');
     } catch (error) {
       console.error('Error updating data:', error.message);
     }
   };
 
-  const RemoveButton = ({ onClick }) => (
+  // 장점 삭제 버튼 컴포넌트
+  const RemoveButton = ({ onClick, index }) => (
     <Button
       variant="danger"
       className="ml-2"
-      onClick={onClick}
+      onClick={() => onClick(index)}
       size="sm"
-      style={{ marginBottom: '10px', marginRight: '5px'}}
+      style={{ marginBottom: '10px', marginRight: '5px' }}
     >
       삭제
     </Button>
   );
 
+  // 장점 추가
   const handleAddAdvantage = () => {
     setAdvantages([...advantages, '']);
   };
 
+  // 장점 삭제
   const handleRemoveAdvantage = (index) => {
     const newAdvantages = [...advantages];
     newAdvantages.splice(index, 1);
     setAdvantages(newAdvantages);
   };
 
+  // 이미지 추가
   const handleAddImage = () => {
     setImages([...images, '']);
   };
 
+  // 이미지 삭제
   const handleRemoveImage = (index) => {
     const newImages = [...images];
     newImages.splice(index, 1);
     setImages(newImages);
+  };
+
+  // 이미지 파일 업로드
+  const handleFileInputChange = async (index, event) => {
+    try {
+      const file = event.target.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+
+      // 이미지 업로드 & URL & 키 이름 가져오기
+      const { imageURL, keyName } = await getImageUrl(formData, 'admin', 'about');
+      const newImages = [...images];
+      const newKeynames = [...keyName];
+      
+      newImages[index] = imageURL;
+      newKeynames[index] = keyName;
+      setImages(newImages);
+      setImageList(newKeynames);
+      console.log(images);
+
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   return (
@@ -127,7 +163,7 @@ const AboutPageUpdate = () => {
                   size="sm"
                   style={{ marginBottom: '10px', marginRight: '5px' }}
                 />
-                <RemoveButton onClick={() => handleRemoveAdvantage(index)} />
+                <RemoveButton onClick={handleRemoveAdvantage} index={index} />
               </div>
             </Form.Group>
           ))}
@@ -144,23 +180,29 @@ const AboutPageUpdate = () => {
       <Row className="image">
         <Col>
           <div className="image-container">
-            {images.map((image, index) => (
-              <div className="image-wrapper" key={index}>
-                <Form.Group controlId={`image${index}`}>
-                  <Form.Label>이미지 {index + 1}</Form.Label>
-                  <div className="d-flex">
-                    <Form.Control
-                      type="text"
-                      value={image}
-                      onChange={(event) => handleImageChange(index, event)}
-                      size="sm"
-                      style={{ marginBottom: '10px', marginRight: '5px' }}
-                    />
-                    <RemoveButton onClick={() => handleRemoveImage(index)} />
-                  </div>
-                </Form.Group>
-              </div>
-            ))}
+            {images.map((image, index) => {
+              const uid = image.split('_uid_')[1];
+              const displayedImageUrl = `about/admin_uid_${uid}`;
+
+              return (
+                <div className="image-wrapper" key={index}>
+                  <Form.Group controlId={`image${index}`}>
+                    <Form.Label>이미지 {index + 1}</Form.Label>
+                    <div className="d-flex">
+                      <Form.Control
+                        type="file"
+                        accept=".jpg"
+                        onChange={(event) => handleFileInputChange(index, event)}
+                        size="sm"
+                        style={{ marginBottom: '10px', marginRight: '5px' }}
+                      />
+                      <RemoveButton onClick={handleRemoveImage} index={index} />
+                    </div>
+                      {image && <p>선택된 파일: {displayedImageUrl}</p>}
+                  </Form.Group>
+                </div>
+              );
+            })}
           </div>
           <Button
             variant="primary"
