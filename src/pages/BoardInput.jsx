@@ -224,7 +224,7 @@ const BoardInput = ({ page }) => {
               <option value="">선택하세요</option>
               <option value="후쿠오카">후쿠오카</option>
               <option value="나가사키">나가사키</option>
-              <option value="쿠마모토">쿠마모토</option>
+              <option value="구마모토">구마모토</option>
               <option value="오이타">오이타</option>
               <option value="사가">사가</option>
             </Form.Select>

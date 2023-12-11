@@ -63,7 +63,7 @@ const MainPage = () => {
   return (
     <>
       {/* 상단 이미기 갤러리 스페이스*/}
-      <div className='w-auto d-flex justify-content-center align-items-center' style={{ height: '91vh' }}>
+      <div className='w-auto d-flex justify-content-center align-items-center' style={{ height: '93vh' }}>
         <div className="container ">
           <ImageGallery path="about" />
         </div>
@@ -94,11 +94,11 @@ const MainPage = () => {
               category= '나가사키'
               />
             <Category
-              name= "쿠마모토 현"
+              name= "구마모토 현"
               img = "https://res-4.cloudinary.com/jnto/image/upload/w_670,h_450,c_fill,f_auto,fl_lossy,q_auto/v1514403676/kumamoto/Kumamoto1541_8" 
               detail='구마모토 재건을 돕는 온천 리조트와 웅장한 성채, 이름난 현지 음식 쿠마모토현의 웅대한 자연은 외국인 관광객분들께 언제나 사랑받고 있는 매력포인트입니다.'
-              postCount= {categoryCounts['쿠마모토'] || 0}
-              category= '쿠마모토'
+              postCount= {categoryCounts['구마모토'] || 0}
+              category= '구마모토'
               />
             <Category
               name= "사가 현"
