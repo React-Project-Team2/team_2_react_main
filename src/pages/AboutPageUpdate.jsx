@@ -62,9 +62,11 @@ const AboutPageUpdate = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
+
     // 업로드되지 않은 이미지 필터링
     const uploadedImages = images.filter((image) => image);
-  
+    deleteImages(uploadedImages, new Set(), 'others', 'images');
+    
     const updatedData = {
       introduction,
       advantages,
@@ -78,6 +80,12 @@ const AboutPageUpdate = () => {
       console.error('Error updating data:', error.message);
     }
   };
+
+const handleCancel = async (event) => {
+  event.preventDefault();
+
+
+}
 
   // 장점 삭제 버튼 컴포넌트
   const RemoveButton = ({ onClick, index }) => (
@@ -116,26 +124,43 @@ const AboutPageUpdate = () => {
     setImages(newImages);
   };
 
-  // 이미지 파일 업로드
   const handleFileInputChange = async (index, event) => {
     try {
       const file = event.target.files[0];
+  
+      if (!file) {
+        // 파일이 없는 경우 예외 처리 또는 사용자에게 메시지 표시
+        throw new Error('파일을 선택해주세요.');
+      }
+  
       const formData = new FormData();
       formData.append('image', file);
-
+  
       // 이미지 업로드 & URL & 키 이름 가져오기
       const { imageURL, keyName } = await getImageUrl(formData, 'admin', 'about');
+  
+      if (!imageURL || !keyName) {
+        // 이미지 URL 또는 키 이름이 없는 경우 예외 처리 또는 사용자에게 메시지 표시
+        throw new Error('이미지 업로드에 실패했습니다.');
+      }
+  
+      // 새로운 이미지 배열 및 키 이름 배열 생성
       const newImages = [...images];
-      const newKeynames = [...keyName];
-      
+      const newKeyNames = [...imageList];
+  
+      // 해당 인덱스의 이미지 및 키 이름 업데이트
       newImages[index] = imageURL;
-      newKeynames[index] = keyName;
+      newKeyNames[index] = keyName;
+  
+      // 상태 업데이트
       setImages(newImages);
-      setImageList(newKeynames);
-      console.log(images);
-
+      setImageList(newKeyNames);
+  
+      // 비동기 작업 완료 후에 이미지 상태를 콘솔에 로그
+      console.log(newImages);
     } catch (error) {
-      console.error(error.message);
+      // 에러 메시지를 사용자에게 표시하거나 알림을 통해 알리기
+      console.error('이미지 업로드 오류:', error.message);
     }
   };
 
@@ -214,11 +239,17 @@ const AboutPageUpdate = () => {
           </Button>
         </Col>
       </Row>
-      <div className="text-center mt-4">
-        <Button variant="primary" size="md" onClick={handleSubmit}>
-          저장
-        </Button>
-      </div>
+      <Row className="text-center mt-4">
+        <Col lg="9"/>
+        <Col>
+          <Button className='mx-3' variant="primary" size="md" onClick={handleSubmit}>
+            저장
+          </Button>
+          <Button variant="primary" size="md" onClick={handleCancel}>
+            취소
+          </Button>
+        </Col>
+      </Row>
     </Card>
   );
 };
