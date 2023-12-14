@@ -50,3 +50,7 @@
   resize: none;
   overflow: hidden;
 }
+
+.comment-dropdown {
+  display: block !important;
+}
