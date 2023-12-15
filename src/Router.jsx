@@ -8,7 +8,6 @@ import SignUpPage from './pages/SignUpPage'
 import SignInPage from './pages/SignInPage'
 import BoardInput from './pages/BoardInput'
 import PostPage from './pages/PostPage'
-import ProfilePage from './pages/ProfilePage'
 import AuthRouter from './components/common/Auth/AuthRouter';
 import TeamAboutPage from './pages/TeamAboutPage'
 import TeamAboutPageUpdate from './pages/TeamAboutPageUpdate'

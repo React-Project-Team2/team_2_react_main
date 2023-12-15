@@ -15,7 +15,7 @@ const AboutPage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(apiUrl);
-        const data = response.data[0]; 
+        const data = response.data[0];
 
         setIntroduction(data.introduction);
         setAdvantages(data.advantages);
@@ -26,7 +26,7 @@ const AboutPage = () => {
     };
 
     fetchData();
-  }, []); 
+  }, []);
 
   const toggleEdit = () => {
     navigate('/about/update');
@@ -61,7 +61,7 @@ const AboutPage = () => {
           </div>
         </Col>
       </Row>
-      <Row>
+      <Row className='pt-4'>
         <Button variant="primary" size="md" onClick={toggleEdit}>수정</Button>
       </Row>
     </Card>
