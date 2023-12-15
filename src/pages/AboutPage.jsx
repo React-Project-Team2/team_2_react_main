@@ -61,9 +61,9 @@ const AboutPage = () => {
           </div>
         </Col>
       </Row>
-      <div className="text-center mt-4">
+      <Row>
         <Button variant="primary" size="md" onClick={toggleEdit}>수정</Button>
-      </div>
+      </Row>
     </Card>
   );
 }
