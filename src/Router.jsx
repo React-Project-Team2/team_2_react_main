@@ -8,7 +8,6 @@ import SignUpPage from './pages/SignUpPage'
 import SignInPage from './pages/SignInPage'
 import BoardInput from './pages/BoardInput'
 import PostPage from './pages/PostPage'
-import ProfilePage from './pages/ProfilePage'
 import AuthRouter from './components/common/Auth/AuthRouter';
 import TeamAboutPage from './pages/TeamAboutPage'
 import TeamAboutPageUpdate from './pages/TeamAboutPageUpdate'
@@ -22,7 +21,6 @@ const Router = () => {
       <Route path="/board" element={<BoardPage />} />
       <Route path="/signUp" element={<SignUpPage />} />
       <Route path="/signIn" element={<SignInPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
       <Route path="/board/:category_name" element={<BoardPage />} />
       <Route path="/board/:category_name/:post_id" element={<PostPage />} />
       <Route path="/board/:category_name/create" element={

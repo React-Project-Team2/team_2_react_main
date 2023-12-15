@@ -3,6 +3,7 @@ import { Row, Col, Button, Card, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/About.css";
+import { configureAWS, getImageUrl, deleteImages } from "../components/common/aws/awsServices";
 
 const TeamAboutPageUpdate = () => {
   const navigate = useNavigate();
@@ -11,10 +12,13 @@ const TeamAboutPageUpdate = () => {
     name: "",
     std: "",
     link: "",
-    image: "",
+    image: "", // 기본 이미지
   });
+  const [stackImageList, setStackImageList] = useState([]);
+  const [newImageUrlList, setNewImageUrlList] = useState([]);
 
   useEffect(() => {
+    configureAWS();
     fetchData();
   }, []);
 
@@ -25,11 +29,22 @@ const TeamAboutPageUpdate = () => {
 
       if (data && Array.isArray(data)) {
         setTeamMembers(data);
+        let fetchImgList = data.map((item) => {
+          return 'admin_uid_' + item.image.split('_uid_')[1];
+        }).filter(Boolean);
+        setStackImageList(fetchImgList);
+
+        let fetchImageUrlList = data.map((item) => {
+          return item.image;
+        });
+
+        setNewImageUrlList(fetchImageUrlList);
+
       } else {
-        console.error("Invalid team data:", data);
+        console.error("팀 데이터가 잘못되었습니다:", data);
       }
     } catch (error) {
-      console.error("Error fetching data:", error.message);
+      console.error("데이터를 가져오는 중 오류가 발생했습니다:", error.message);
     }
   };
 
@@ -40,8 +55,51 @@ const TeamAboutPageUpdate = () => {
       [name]: value,
     }));
   };
+
+  const handleInputImageChange = async (event) => {
+    const { name } = event.target;
+
+    const file = event.target.files[0];
+
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const { imageURL, keyName } = await getImageUrl(formData, 'admin', 'users');
+
+    let sList = stackImageList;
+    let nList = newImageUrlList;
+    sList.push(keyName);
+    nList.push(imageURL);
+    setNewImageUrlList(sList);
+    setNewImageUrlList(nList);
+
+    console.log(imageURL)
+
+    setNewMember((prevNewMember) => ({
+      ...prevNewMember,
+      [name]: imageURL,
+    }));
+  };
+
   const handleRemoveMember = async (index) => {
     const removedMember = teamMembers[index];
+    let nList = newImageUrlList;
+    nList.splice(index, 1);
+    setNewImageUrlList(nList);
+
+    console.log(stackImageList);
+    console.log(nList);
+
+    const uploadedImages = nList.map((item) => {
+      const uidPart = item.match(/\/users\/(.+)$/);
+      console.log(uidPart[1]);
+      return uidPart;
+    }).filter(Boolean); // falsy값 제거
+
+    uploadedImages.push("admin_uid_default.jpg");
+
+    deleteImages(stackImageList, new Set(uploadedImages), 'others', 'users');
 
     try {
       await axios.delete(`http://localhost:3300/team/${removedMember.id}`);
@@ -49,54 +107,61 @@ const TeamAboutPageUpdate = () => {
         prevTeamMembers.filter((_, i) => i !== index)
       );
     } catch (error) {
-      console.error("Error removing member:", error.message);
+      console.error("멤버를 삭제하는 중 오류가 발생했습니다:", error.message);
     }
   };
 
   const handleSubmit = async () => {
-    // Check if all fields are empty
-    if (
-      !newMember.name &&
-      !newMember.std &&
-      !newMember.link &&
-      !newMember.image
-    ) {
-      alert("폼을 작성해 주세요.");
-      return;
-    }
+    console.log(newMember);
 
-    try {
-      // Save the new member data to the server
-      const response = await axios.post(
-        "http://localhost:3300/team",
-        newMember
-      );
-      const addedMember = response.data;
+    // 필수 필드가 비어 있는지 확인
+    if (!newMember.name) {
+      return navigate("/team"); // 페이지로 이동하지만, 데이터베이스에 저장되지 않음
+    } else {
 
-      // Update the local state with the new member
-      setTeamMembers((prevTeamMembers) => [...prevTeamMembers, addedMember]);
-      setNewMember({
-        name: "",
-        std: "",
-        link: "",
-        image: "",
-      });
+      // 이미지가 제공되지 않으면 기본 이미지를 사용
+      console.log(newMember.image)
+      const imageUrl =
+        newMember.image ||
+        "https://my-react-team-project.s3.ap-northeast-2.amazonaws.com/users/admin_uid_default.jpg";
 
-      // Navigate to the /team page after saving
-      navigate("/team");
-    } catch (error) {
-      console.error("Error adding member:", error.message);
-      alert("An error occurred while saving the new member. Please try again.");
+      try {
+        // 새로운 멤버 데이터를 서버에 저장
+        const response = await axios.post("http://localhost:3300/team", {
+          ...newMember,
+          image: imageUrl,
+        });
+
+        const addedMember = response.data;
+
+        // 새로운 멤버로 로컬 상태를 업데이트
+        setTeamMembers((prevTeamMembers) => [...prevTeamMembers, addedMember]);
+
+        // 새로운 멤버 추가 상태 초기화
+        setNewMember({
+          name: "",
+          std: "",
+          link: "",
+          image: "",
+        });
+
+        // 아래 주석을 해제하면 페이지로 이동하면서 데이터베이스에도 저장됩니다.
+        navigate("/team");
+      } catch (error) {
+        console.error("멤버를 추가하는 중 오류가 발생했습니다:", error.message);
+        alert("새로운 멤버를 저장하는 중 오류가 발생했습니다. 다시 시도해 주세요.");
+      }
     }
   };
+
 
   return (
     <Card body className="about">
       <Row className="justify-content-center" style={{ marginBottom: "20px" }}>
         {teamMembers.map((member, index) => (
-          <Col key={index} md={4} className="mb-4">
-            <Card style={{ width: "18rem" }} className="text-center">
-              <Card.Img variant="top" src={member.image} />
+          <Col key={index} md={5} lg={4} className="mb-4">
+            <Card style={{ width: '18rem' }} className="text-center">
+              <Card.Img variant="top" src={member.image} className='card-img' />
               <Card.Body>
                 <Card.Title>
                   <strong>{member.name}</strong>
@@ -166,9 +231,8 @@ const TeamAboutPageUpdate = () => {
                 <Form.Control
                   type="file"
                   accept=".jpg"
-                  onChange={handleInputChange}
+                  onChange={handleInputImageChange}
                   name="image"
-                  value={newMember.image}
                   size="sm"
                   style={{ marginBottom: "10px", marginRight: "5px" }}
                 />
