@@ -10,6 +10,8 @@ import BoardInput from './pages/BoardInput'
 import PostPage from './pages/PostPage'
 import ProfilePage from './pages/ProfilePage'
 import AuthRouter from './components/common/Auth/AuthRouter';
+import TeamAboutPage from './pages/TeamAboutPage'
+import TeamAboutPageUpdate from './pages/TeamAboutPageUpdate'
 
 
 const Router = () => {
@@ -35,6 +37,8 @@ const Router = () => {
       } />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/about/update" element={<AboutPageUpdate />} />
+      <Route path="/team" element={<TeamAboutPage />} />
+      <Route path="/team/update" element={<TeamAboutPageUpdate />} />
     </Routes>
   )
 }
