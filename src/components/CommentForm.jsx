@@ -5,8 +5,8 @@ import { PencilFill } from 'react-bootstrap-icons';
 import '../styles/CommentForm.css'
 
 const CommentForm = ({ postId, user, created_at, onCommentSubmit }) => {
-    let userId = 'abcd'; // 사용자 아이디 기본값
-    let userNickname = 'abcd'; // 사용자 닉네임 기본값
+    let userId = ''; // 사용자 아이디 기본값
+    let userNickname = ''; // 사용자 닉네임 기본값
     if (user !== null) {
         userId = user.userId;
         userNickname = user.nickname;
@@ -19,6 +19,11 @@ const CommentForm = ({ postId, user, created_at, onCommentSubmit }) => {
 
         if (!text.trim()) {
             alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+
+        if (user === null) {
+            alert("로그인 후 작성해 주세요.");
             return;
         }
 
