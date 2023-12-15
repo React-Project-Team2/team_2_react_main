@@ -35,7 +35,7 @@ const BoardPage = () => {
             <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="boardpage-img rounded-top" alt='후쿠오카 이미지(야경)' />
           </div>
           <Container>
-            <Container className='d-flex justify-content-between flex-wrap py-1 my-3'>
+            <Container className='d-flex justify-content-between border-bottom border-dark border-2 flex-wrap py-1 my-3'>
               <Dropdown className="board-dropdown my-1" onSelect={handleSelectCategory} >
                 <Dropdown.Toggle variant="success">
                   {category}
