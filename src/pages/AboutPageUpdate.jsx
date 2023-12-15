@@ -155,7 +155,7 @@ const handleCancel = async (event) => {
       // 상태 업데이트
       setImages(newImages);
       setImageList(newKeyNames);
-  
+
       // 비동기 작업 완료 후에 이미지 상태를 콘솔에 로그
       console.log(newImages);
     } catch (error) {
@@ -217,13 +217,13 @@ const handleCancel = async (event) => {
                       <Form.Control
                         type="file"
                         accept=".jpg"
-                        onChange={(event) => handleFileInputChange(index, event)}
+                        onChange={(event) => handleFileInputChange(index, event)}           
                         size="sm"
                         style={{ marginBottom: '10px', marginRight: '5px' }}
                       />
                       <RemoveButton onClick={handleRemoveImage} index={index} />
                     </div>
-                      {image && <p>선택된 파일: {displayedImageUrl}</p>}
+                    {image && <p>선택된 파일: {displayedImageUrl}</p>}
                   </Form.Group>
                 </div>
               );
@@ -245,7 +245,7 @@ const handleCancel = async (event) => {
           <Button className='mx-3' variant="primary" size="md" onClick={handleSubmit}>
             저장
           </Button>
-          <Button variant="primary" size="md" onClick={handleCancel}>
+          <Button variant="primary" size="md" href='/About'>
             취소
           </Button>
         </Col>
