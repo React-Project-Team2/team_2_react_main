@@ -70,7 +70,7 @@ const MainPage = () => {
       </div>
       {/* 하단 커테이너 스페이스 */}
       <div className='w-auto custom-background '>
-        <div className="pb-5 pt-5 container text-center">
+        <div className="p-5 container text-center">
           <h1>현지 학기제</h1>
         </div>
       {/* 카테고리 컨테이너 */}
