@@ -81,7 +81,7 @@ const PostComponent = ({ category }) => {
                     {post.title}
                   </p>
                   <p className='post-content mb-1'>
-                    {post.content.map(item => item.insert).join('\n').replace(/^\s+|\s+$/g, '')}
+                    {post.content.map(item => item.insert.hasOwnProperty('image') ? "이미지" : item.insert).join('\n').replace(/^\s+|\s+$/g, '')}
                   </p>
                 </Col>
                 <Col sm={3} md={2} className='d-flex align-items-center'>

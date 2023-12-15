@@ -101,9 +101,9 @@ const Comment = ({ comment, postId, user, created_at, onCommentChange }) => {
                     <p className='comment-text mb-2 pe-3'>{comment.text}</p>
 
                     <div className='comment-menu pe-1'>
-                        {user === null || user.userId === comment.userId ? (
-                            <Dropdown>
-                                <Dropdown.Toggle as={ThreeDotsVertical} variant='primary' id='dropdown-basic'>더보기</Dropdown.Toggle>
+                        {user && user.userId === comment.userId ? (
+                            <Dropdown className='comment-dropdown'>
+                                <Dropdown.Toggle as={ThreeDotsVertical} variant='primary' id='dropdown-basic' >더보기</Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     <Dropdown.Item onClick={handleEdit}>수정</Dropdown.Item>
                                     <Dropdown.Item onClick={handleDelete}>삭제</Dropdown.Item>
