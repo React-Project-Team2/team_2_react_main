@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <Navbar collapseOnSelect sticky="top">
         <Container className='d-flex'>
-            <Navbar.Brand href="#">서비스 명</Navbar.Brand>
+            <Navbar.Brand href="/"><img className='Logo' src="https://i.ibb.co/FYDRYjX/Logo.png" alt="logo" /></Navbar.Brand>
                 <Nav className="ms-auto d-flex justify-content-between align-items-center">
                     <Nav.Link href="/">
                       <Button variant="outline-secondary" className='nav-btn'>
@@ -28,6 +28,11 @@ const Header = () => {
                     <Nav.Link href="/about">
                       <Button variant="outline-secondary" className='nav-btn'>
                         About
+                      </Button>
+                    </Nav.Link>
+                    <Nav.Link href="/team">
+                      <Button variant="outline-secondary" className='nav-btn'>
+                        Team
                       </Button>
                     </Nav.Link>
                     <Nav.Link href="/board">
