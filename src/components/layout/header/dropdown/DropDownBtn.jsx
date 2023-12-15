@@ -27,6 +27,7 @@ const DropDownBar = () => {
     >
       <Dropdown.Item eventKey="1" href='/'>Forum</Dropdown.Item>
       <Dropdown.Item eventKey="2" href='/about'>About</Dropdown.Item>
+      <Dropdown.Item eventKey="2" href='/team'>Team</Dropdown.Item>
       <Dropdown.Item eventKey="3" href='/board'>게시판</Dropdown.Item>
       <Dropdown.Divider />
       {state.isLogged ? (
