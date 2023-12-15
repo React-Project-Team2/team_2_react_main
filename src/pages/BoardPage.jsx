@@ -28,14 +28,13 @@ const BoardPage = () => {
       <div className='container-fluid pb-5 board'>
         <div className="pb-5 pt-5 container text-center">
           <h1>현지 학기제</h1>
-          <h3>sub name</h3>
         </div>
         <Container className="bg-white p-0 rounded white-board">
           <div className='boardpage-img-box'>
             <img src="https://www.japanrailpassnow.co.uk/wp-content/uploads/2016/04/1000x400xFukuika-City-Guide.jpg.pagespeed.ic.n_LDvIx_LM.webp" className="boardpage-img rounded-top" alt='후쿠오카 이미지(야경)' />
           </div>
           <Container>
-            <Container className='d-flex justify-content-between border-bottom border-dark border-2 flex-wrap py-1 my-3'>
+            <Container className='d-flex justify-content-between border-bottom border-dark border-2 flex-wrap mt-3 pt-1 pb-4'>
               <Dropdown className="board-dropdown my-1" onSelect={handleSelectCategory} >
                 <Dropdown.Toggle variant="success">
                   {category}

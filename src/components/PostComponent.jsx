@@ -71,7 +71,7 @@ const PostComponent = ({ category }) => {
 
   if (totalPages > 0) {
     return (
-      <Container className='border-top border-dark border-2 post-main-box'>
+      <Container className='post-main-box'>
         {posts.map((post, index) => (
           <div key={post.id} className={index !== 0 ? 'border-top border-2 mb-3' : 'mb-3'}>
             <div onClick={() => goToDetailPage(category, post.id)} >
