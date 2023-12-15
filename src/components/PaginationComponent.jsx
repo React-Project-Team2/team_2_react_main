@@ -12,14 +12,14 @@ const PaginationComponent = ({ currentPage, totalPages, pagesPerGroup, handlePag
 
     if (totalPages > pagesPerGroup) {
       pages.push(
-        <Pagination.First onClick={() => handlePageChange(1)} disabled={currentPage === 1} />,
-        <Pagination.Prev onClick={() => handlePageChange(Math.max(1, currentPage - 1))} disabled={currentPage === 1} />
+        <Pagination.First key="first" onClick={() => handlePageChange(1)} disabled={currentPage === 1} />,
+        <Pagination.Prev key="prev" onClick={() => handlePageChange(Math.max(1, currentPage - 1))} disabled={currentPage === 1} />
       );
     }
 
     for (let number = startPage; number <= endPage; number++) {
       pages.push(
-        <Pagination.Item active={number === currentPage} onClick={() => handlePageChange(number)}>
+        <Pagination.Item key={number} active={number === currentPage} onClick={() => handlePageChange(number)}>
           {number}
         </Pagination.Item>,
       );
@@ -27,8 +27,8 @@ const PaginationComponent = ({ currentPage, totalPages, pagesPerGroup, handlePag
     
     if (totalPages > pagesPerGroup) {
       pages.push(
-        <Pagination.Next onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages} />,
-        <Pagination.Last onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages} />
+        <Pagination.Next key="next" onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages} />,
+        <Pagination.Last key="last" onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages} />
       );
     }
   }
