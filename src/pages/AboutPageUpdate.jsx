@@ -9,8 +9,8 @@ const AboutPageUpdate = () => {
   const navigate = useNavigate();
   const [introduction, setIntroduction] = useState('');
   const [advantages, setAdvantages] = useState([]);
-  const [images, setImages] = useState([]);
-  const [imageList, setImageList] = useState([]);
+  const [images, setImages] = useState([]); // 신규 이미지 리스트
+  const [imageList, setImageList] = useState([]); // 누적 이미지리스트
   const apiUrl = 'http://localhost:3300/about/3';
 
   useEffect(() => {
@@ -31,11 +31,10 @@ const AboutPageUpdate = () => {
         setImages([...data.images]);
 
         let imgList = data.images.map((item) => {
-          const uidPart = item.match(/_uid_([^_]+)_/);
-          return uidPart ? 'about/admin_uid_' + uidPart[1] + '.jpg' : null;
-        }).filter(Boolean); // falsy값 제거    
-
-        console.log(imgList);
+          const uidPart = item.match(/\/about\/(.+)$/);
+          return uidPart[1];
+        }).filter(Boolean); // falsy값 제거  
+        
         setImageList([...imgList]);
       } catch (error) {
         console.error('Error fetching data:', error.message);
@@ -61,16 +60,21 @@ const AboutPageUpdate = () => {
   // 폼 제출
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
 
-    // 업로드되지 않은 이미지 필터링
-    const uploadedImages = images.filter((image) => image);
-    deleteImages(uploadedImages, new Set(), 'others', 'images');
+    //  이미지 이름 필터링(검사용)
+    const uploadedImages = images.map((item) => {
+      const uidPart = item.match(/\/about\/(.+)$/);
+      return uidPart[1];
+    }).filter(Boolean); // falsy값 제거  
+
+    if(uploadedImages.length !== imageList.length){
+      deleteImages(imageList, new Set(uploadedImages), 'others', 'about');
+    }
     
     const updatedData = {
       introduction,
       advantages,
-      images: uploadedImages,
+      images: images,
     };
   
     try {
@@ -81,11 +85,6 @@ const AboutPageUpdate = () => {
     }
   };
 
-const handleCancel = async (event) => {
-  event.preventDefault();
-
-
-}
 
   // 장점 삭제 버튼 컴포넌트
   const RemoveButton = ({ onClick, index }) => (
@@ -138,7 +137,7 @@ const handleCancel = async (event) => {
   
       // 이미지 업로드 & URL & 키 이름 가져오기
       const { imageURL, keyName } = await getImageUrl(formData, 'admin', 'about');
-  
+    
       if (!imageURL || !keyName) {
         // 이미지 URL 또는 키 이름이 없는 경우 예외 처리 또는 사용자에게 메시지 표시
         throw new Error('이미지 업로드에 실패했습니다.');
@@ -147,17 +146,14 @@ const handleCancel = async (event) => {
       // 새로운 이미지 배열 및 키 이름 배열 생성
       const newImages = [...images];
       const newKeyNames = [...imageList];
-  
+      
       // 해당 인덱스의 이미지 및 키 이름 업데이트
       newImages[index] = imageURL;
-      newKeyNames[index] = keyName;
-  
+      newKeyNames.push(keyName);    
+
       // 상태 업데이트
       setImages(newImages);
       setImageList(newKeyNames);
-
-      // 비동기 작업 완료 후에 이미지 상태를 콘솔에 로그
-      console.log(newImages);
     } catch (error) {
       // 에러 메시지를 사용자에게 표시하거나 알림을 통해 알리기
       console.error('이미지 업로드 오류:', error.message);
