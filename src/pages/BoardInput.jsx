@@ -6,8 +6,7 @@ import ImageResize from 'quill-image-resize';
 import 'react-quill/dist/quill.snow.css';
 
 import axios from 'axios';
-import '../styles/BoardInput.css'
-
+import '../styles/BoardInput.css';
 import { getImageUrl, deleteImages, configureAWS, extractionValue } from '../components/common/aws/awsServices';
 
 // 이미지 크기조절
@@ -128,7 +127,7 @@ const BoardInput = ({ page }) => {
 
         let fetchImgList = result.content.map((item) => {
           if (item['insert'] && typeof item['insert'] === 'object' && item['insert'].hasOwnProperty('image')) {
-            return result.userId + '_uid_' + item['insert'].image.split('_uid_')[1];
+            return user.userId + '_uid_' + item['insert'].image.split('_uid_')[1];
           }
           return null;
         }).filter(Boolean);
@@ -138,7 +137,7 @@ const BoardInput = ({ page }) => {
       fetchData();
       console.log('useEffect 확인');
     }
-  }, [page, post_id, checkUser]);
+  }, [page, post_id, checkUser, user.userId]);
 
   // DB에 저장 : Create
   const createPost = async (formData) => {
@@ -147,7 +146,7 @@ const BoardInput = ({ page }) => {
 
       if (response.status === 201) {
         alert('등록 완료');
-        navigate('/board');
+        navigate(`/board/${category}`);
       }
 
     } catch (error) {
@@ -161,7 +160,7 @@ const BoardInput = ({ page }) => {
       const response = await axios.patch(url + '/' + post_id, formData);
       if (response.status === 200) {
         alert('수정 완료');
-        navigate('/board');
+        navigate(`/board/${category_name}/${post_id}`);
       }
     } catch (error) {
       console.log(error.message);
@@ -203,6 +202,8 @@ const BoardInput = ({ page }) => {
     }
   }
 
+
+  // 취소 버튼 이벤트
   const cancelEv = () => {
     if (page === 'create') {
       deleteImages(fileList, new Set(), 'delete', 'images');
@@ -213,6 +214,17 @@ const BoardInput = ({ page }) => {
       navigate('/board/'+ category_name + '/' + post_id);
     }
   }
+
+  // window.addEventListener('beforeunload', (event) => {
+  //   if (page === 'create') {
+  //     deleteImages(fileList, new Set(), 'delete', 'images');
+  //     navigate(`/board/${category_name}`);
+  //   } else if (page === 'update') {
+  //     let imgList = extractionValue(postData.content, user.userId);
+  //     deleteImages(fileList, new Set(imgList), 'others', 'images');
+  //     navigate(`/board/${category_name}/${post_id}`);
+  //   }
+  // });
 
   return (
     <>

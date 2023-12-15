@@ -166,7 +166,7 @@ const PostPage = () => {
                 <div className='mb-3'><ChatRight className='me-2' /><span>{comments.length} comments</span></div>
               </div>
               <div className='d-md-flex flex-column'>
-                <Button className='mb-2' variant="outline-warning" onClick={() => navigate('/board')} >돌아가기</Button>
+                <Button className='mb-2' variant="outline-warning" onClick={() => navigate(`/board/${category_name}`)} >돌아가기</Button>
                 {
                   (user !== null && user.id === postData.user_id) ? <>
                     <Button className='mb-2' variant="outline-secondary" onClick={() => navigate('/board/' + category_name + '/update/' + post_id)} >수정하기</Button>

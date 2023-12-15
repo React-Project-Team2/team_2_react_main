@@ -9,7 +9,7 @@ export const configureAWS = () => {
   });
 };
 
-// 이미지 삭제 (fileList, Set타입 리스트, delete or other, 디렉토리 이름)
+// 이미지 삭제 (fileList, Set타입 리스트, delete or others, 디렉토리 이름)
 export const deleteImages = async (fileList, myImages, confirm, dirName) => {
   let deleteList = (confirm !== 'delete' ? fileList.filter((item) => { return !myImages.has(item) }) : fileList);
 
@@ -44,7 +44,7 @@ export const deleteImages = async (fileList, myImages, confirm, dirName) => {
   }
 }
 
-// 이미지 url 가져오기
+// 이미지 url 가져오기( file데이터, admin or user_id, 디렉토리 이름)
 export const getImageUrl = async (formData, userName, dirName) => {
   try {
 
