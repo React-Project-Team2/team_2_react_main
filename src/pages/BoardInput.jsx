@@ -227,8 +227,8 @@ const BoardInput = ({ page }) => {
   // });
 
   return (
-    <>
-      <div className='container-md py-5' id='board-insert-div'>
+    <div className='pb-4'>
+      <div className='container-md rounded p-5' id='board-insert-div'>
         <Form className='input-form' >
           <Form.Group className='mb-3'>
             <Form.Label>카테고리</Form.Label>
@@ -263,13 +263,13 @@ const BoardInput = ({ page }) => {
           </Form.Group>
         </Form>
 
-        <div className='d-md-flex justify-content-end'>
+        <div className='pt-2 d-md-flex justify-content-end'>
           <Button variant="outline-warning" onClick={cancelEv}>취소</Button>
           <Button className='ms-3' variant="outline-secondary" onClick={checkForm} >저장하기</Button>
         </div>
 
       </div>
-    </>
+    </div>
   );
 }
 
